@@ -1,0 +1,14 @@
+﻿{
+    "id":  "document-plagiarism-checker",
+    "name":  "Document Plagiarism Checker",
+    "domain":  "Artificial Intelligence \u0026 Machine Learning",
+    "repository":  "https://github.com/regiapriandi012/plagiarism-check",
+    "stack":  "Python; TF-IDF; Flask",
+    "goal":  "N-gram/fingerprint similarity across a local corpus, highlighted overlap report.",
+    "license":  "MIT",
+    "licenseWarning":  null,
+    "entry":  "app.py",
+    "expectedFileCount":  3,
+    "downloadStatus":  "success",
+    "downloadedFileCount":  19
+}
