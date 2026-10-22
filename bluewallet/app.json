@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "BlueWallet",
+    "slug": "bluewallet",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.foundev.bluewallet"
+    },
+    "android": {
+      "package": "com.foundev.bluewallet",
+      "adaptiveIcon": {
+        "backgroundColor": "#f59e0b"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}

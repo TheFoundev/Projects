@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Console · Series</title>
+<meta name="description" content="Series reads a short time series and says what shape it has: a sine, a square or a trend, with the spectrum, the roughness and the dominant frequency as the features that decide it.">
+<meta name="theme-color" content="hsl(199 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=ui-sans-serif,+system-ui,+-apple-system,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">Sr</span>
+    <span><strong>Series</strong><small>Short series, read as a shape</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="">Overview</a><a href="console.html" class="active">Console</a></nav>
+</header>
+
+<main id="main" class="wrap">
+  <section>
+    <div class="head">
+      <div>
+        <span class="eyebrow">Console</span>
+        <h1 style="margin-top:10px;font-size:clamp(1.7rem,3.4vw,2.4rem)">Series</h1>
+        <p class="lede" style="margin-top:8px">The accuracy of the classifier, the number of series of the test set and the number of correct answers per class, with the confusion of the run.</p>
+      </div>
+      <div class="toolbar">
+        <button class="btn small" data-refresh>Refresh</button>
+        
+      </div>
+    </div>
+    <div class="stats reveal"><div class="stat"><div class="value" data-stat="accuracy">—</div><div class="label">Accuracy</div></div><div class="stat"><div class="value" data-stat="test_series">—</div><div class="label">Test series</div></div><div class="stat"><div class="value" data-stat="sine_correct">—</div><div class="label">Sine correct</div></div><div class="stat"><div class="value" data-stat="trend_correct">—</div><div class="label">Trend correct</div></div></div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="grid cols-2">
+      <section class="panel reveal">
+  <div class="panel-head"><h3>The confusion of the run</h3><span class="badge" data-panel-status>idle</span></div>
+  <div class="panel-body"><p class="lede" style="font-size:.92rem">How many series of every true shape were read as every shape the classifier predicted.</p>
+<div class="panel" style="margin-top:14px;box-shadow:none">
+  <table>
+    <thead><tr><th>True</th><th>Predicted</th><th>Series</th></tr></thead>
+    <tbody data-list="confusion"></tbody>
+  </table>
+</div></div>
+</section><section class="panel reveal">
+  <div class="panel-head"><h3>Fit the classifier again</h3><span class="badge" data-panel-status>idle</span></div>
+  <div class="panel-body"><p class="lede" style="font-size:.92rem">The forest is fitted on the training series again and the console shows the metrics of the new run.</p>
+<form data-action style="margin-top:14px">
+  
+  <button class="btn primary" type="submit">Train again</button>
+</form>
+<div class="hint" style="margin-top:12px" data-action-result>The answer of the API will show up here.</div>
+<script>
+  document.querySelectorAll("[data-action]").forEach(function (form) {
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const result = form.querySelector("[data-action-result]");
+      const button = form.querySelector("button");
+      const data = Object.fromEntries(new FormData(form).entries());
+      button.disabled = true;
+      result.textContent = "working...";
+      try {
+        const response = await fetch("/api/train", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        const answer = await response.json();
+        if (!response.ok) throw new Error(answer.error || "the API refused the request");
+        result.textContent = Object.entries(answer)
+          .filter((entry) => typeof entry[1] !== "object")
+          .map((entry) => entry[0] + ": " + entry[1])
+          .join("  ·  ") || "done";
+        if (typeof load === "function") load();
+      } catch (error) {
+        result.textContent = error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+  });
+</script></div>
+</section>
+      
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Series · console</span>
+    <span><a href="index.html">Back to the overview</a></span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("[data-refresh]").forEach(function (button) {
+    button.addEventListener("click", function () { location.reload(); });
+  });
+});
+</script>
+</body>
+</html>

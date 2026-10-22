@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KPI Deck · KPI Deck</title>
+<meta name="description" content="KPI Deck turns a table of sales orders into the numbers a shop is run on: the revenue, the number of orders, the average order value, the growth of the last thirty days against the thirty days before, and the products and the regions that bring the money in.">
+<meta name="theme-color" content="hsl(23 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=ui-sans-serif,+system-ui,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">KD</span>
+    <span><strong>KPI Deck</strong><small>The numbers of the sales, on one page</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="active">Overview</a><a href="console.html" class="">Console</a></nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">commerce &amp; retail</span>
+      <h1>Revenue, orders and the average basket, live.</h1>
+      <p class="lede">KPI Deck turns a table of sales orders into the numbers a shop is run on: the revenue, the number of orders, the average order value, the growth of the last thirty days against the thirty days before, and the products and the regions that bring the money in.</p>
+      <div class="actions">
+        <a class="btn primary" href="console.html">Open the console</a>
+        <a class="btn" href="#how">How it works</a>
+        
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <span class="eyebrow">What it does</span>
+          <h2 style="margin-top:10px">The capabilities</h2>
+        </div>
+        <p class="lede" style="max-width:42ch">Every panel below is served by the real API of this project — nothing here is a mock-up.</p>
+      </div>
+      <div class="grid cols-3"><article class="card reveal">
+          <div class="icon">◆</div>
+          <h3>The revenue of the shop</h3>
+          <p>Every order line is added up, so the number on the card is the money that came in.</p>
+        </article><article class="card reveal">
+          <div class="icon">▤</div>
+          <h3>The average basket</h3>
+          <p>The revenue divided by the number of orders says what an average customer spends.</p>
+        </article><article class="card reveal">
+          <div class="icon">↗</div>
+          <h3>The growth of the month</h3>
+          <p>The last thirty days are compared with the thirty days before them.</p>
+        </article><article class="card reveal">
+          <div class="icon">◑</div>
+          <h3>The products that pay</h3>
+          <p>The revenue of every product is worked out of the same table.</p>
+        </article><article class="card reveal">
+          <div class="icon">⌗</div>
+          <h3>The regions that pay</h3>
+          <p>The revenue of every region stands next to the products in the console.</p>
+        </article><article class="card reveal">
+          <div class="icon">↻</div>
+          <h3>A fresh run on demand</h3>
+          <p>The console runs the pipeline again and shows the numbers of the new run.</p>
+        </article></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Architecture</span>
+          <h2 style="margin:10px 0 12px">How it works</h2>
+          <p class="lede">The pipeline generates ninety days of synthetic orders, writes them to artifacts/sales.csv and works out the KPIs with pandas: the revenue is the sum of the line, the average order value divides it by the number of orders, and the growth compares the last thirty days with the thirty days before. The same numbers are written to artifacts/kpis.json, and the Flask application of the project serves the dashboard and the JSON API of this site from them, so the console and the dashboard always show the same run.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:18px"><span class="badge">Python</span><span class="badge">Flask</span><span class="badge">Pandas</span><span class="badge">NumPy</span><span class="badge">Matplotlib</span><span class="badge">SQLite-free local pipeline</span></div>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">The API</span>
+          <h2 style="margin:10px 0 12px">Endpoints</h2>
+          <div class="panel">
+            <table>
+              <thead><tr><th>Method</th><th>Path</th><th>What it does</th></tr></thead>
+              <tbody><tr><td><code>GET</code></td><td><code>/api/summary</code></td><td>The KPIs of the running instance and the revenue of every product and region</td></tr><tr><td><code>GET</code></td><td><code>/api/kpis</code></td><td>The KPIs as they are written to artifacts/kpis.json</td></tr><tr><td><code>GET</code></td><td><code>/api/products</code></td><td>The revenue of every product</td></tr><tr><td><code>GET</code></td><td><code>/api/regions</code></td><td>The revenue of every region</td></tr><tr><td><code>POST</code></td><td><code>/api/rerun</code></td><td>Run the pipeline again and answer with the new KPIs</td></tr><tr><td><code>GET</code></td><td><code>/chart</code></td><td>The daily revenue of the last run</td></tr><tr><td><code>GET</code></td><td><code>/demo</code></td><td>The dashboard of the project, unchanged</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Quick start</span>
+          <h2 style="margin:10px 0 12px">Run it locally</h2>
+<pre><code># pip install -r requirements.txt
+# python main.py run              # the pipeline and artifacts/kpis.json
+# python app.py                   # the dashboard and this site on port 5000
+# PORT=9002 python app.py         # the dashboard and this site on port 9002
+# pytest -q                       # 3 tests</code></pre>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">Live</span>
+          <h2 style="margin:10px 0 12px">The state of the running instance</h2>
+          <div class="stats" id="stats">
+            <div class="stat"><div class="value" data-stat="__status">—</div><div class="label">Status</div></div>
+            <div class="stat"><div class="value" data-stat="revenue">—</div><div class="label">Revenue</div></div><div class="stat"><div class="value" data-stat="orders">—</div><div class="label">Orders</div></div><div class="stat"><div class="value" data-stat="aov">—</div><div class="label">Average order</div></div><div class="stat"><div class="value" data-stat="growth_pct">—</div><div class="label">Growth %</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>KPI Deck — part of the Foundev portfolio.</span>
+    <span>Themed for commerce &amp; retail.</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

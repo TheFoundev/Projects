@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Saleor · Saleor</title>
+<meta name="description" content="Saleor runs a product catalogue with prices in cents and a stock count, a session cart that never offers more than there is, a checkout that validates the stock and takes it in one transaction, and a small GraphQL endpoint that answers with the products, the orders and the channels.">
+<meta name="theme-color" content="hsl(15 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=ui-sans-serif,+system-ui,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">Sa</span>
+    <span><strong>Saleor</strong><small>GraphQL-first commerce for a growing catalogue</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="active">Overview</a><a href="console.html" class="">Console</a><a href="login.html" class="">Sign in</a></nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">commerce &amp; retail</span>
+      <h1>A shop, a cart and a checkout that keeps the stock honest.</h1>
+      <p class="lede">Saleor runs a product catalogue with prices in cents and a stock count, a session cart that never offers more than there is, a checkout that validates the stock and takes it in one transaction, and a small GraphQL endpoint that answers with the products, the orders and the channels.</p>
+      <div class="actions">
+        <a class="btn primary" href="console.html">Open the console</a>
+        <a class="btn" href="#how">How it works</a>
+        <a class='btn ghost' href='login.html'>Sign in</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <span class="eyebrow">What it does</span>
+          <h2 style="margin-top:10px">The capabilities</h2>
+        </div>
+        <p class="lede" style="max-width:42ch">Every panel below is served by the real API of this project — nothing here is a mock-up.</p>
+      </div>
+      <div class="grid cols-3"><article class="card reveal">
+          <div class="icon">◆</div>
+          <h3>A catalogue with a real stock</h3>
+          <p>Every product has a price in cents and the number of units that are on the shelf.</p>
+        </article><article class="card reveal">
+          <div class="icon">▤</div>
+          <h3>A cart that respects the stock</h3>
+          <p>The cart never holds more units of a product than the shop has, and it says so when a product runs out.</p>
+        </article><article class="card reveal">
+          <div class="icon">✓</div>
+          <h3>A checkout that either happens or does not</h3>
+          <p>The stock is checked again and taken in one transaction, so an order is never half written.</p>
+        </article><article class="card reveal">
+          <div class="icon">⛨</div>
+          <h3>A GraphQL endpoint over the same data</h3>
+          <p>The query is parsed by a GraphQL library, so only the fields that are asked for are read.</p>
+        </article><article class="card reveal">
+          <div class="icon">⌗</div>
+          <h3>The order keeps what was bought</h3>
+          <p>Every line of an order holds the name and the price of the product at the moment of the purchase.</p>
+        </article><article class="card reveal">
+          <div class="icon">⧉</div>
+          <h3>The shop and the desk in one application</h3>
+          <p>The storefront and the resource views of the admin are the same process and the same database.</p>
+        </article></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Architecture</span>
+          <h2 style="margin:10px 0 12px">How it works</h2>
+          <p class="lede">The state of the shop is a SQLite database whose tables are described in config.json: the resources, their fields and the seed rows are created when the application starts. The cart lives in the session of the visitor, the checkout reads the stock of every product again, writes the order and the order lines and takes the units in one transaction, and a rollback puts the stock back when a line cannot be served. The GraphQL endpoint is a real schema over the same tables, so a query answers with the fields that were asked for and the variables are used.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:18px"><span class="badge">Python</span><span class="badge">Flask</span><span class="badge">SQLite</span><span class="badge">Jinja</span><span class="badge">graphql-core</span><span class="badge">Session auth</span></div>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">The API</span>
+          <h2 style="margin:10px 0 12px">Endpoints</h2>
+          <div class="panel">
+            <table>
+              <thead><tr><th>Method</th><th>Path</th><th>What it does</th></tr></thead>
+              <tbody><tr><td><code>GET</code></td><td><code>/api/summary</code></td><td>The products, the orders, the revenue and the open orders of the shop</td></tr><tr><td><code>GET</code></td><td><code>/api/meta</code></td><td>The resources, their fields and the features of the shop</td></tr><tr><td><code>GET</code></td><td><code>/api/products</code></td><td>The catalogue, newest first</td></tr><tr><td><code>GET</code></td><td><code>/api/orders</code></td><td>The orders of the shop, newest first</td></tr><tr><td><code>POST</code></td><td><code>/api/products</code></td><td>Create a product (a signed-in account is needed)</td></tr><tr><td><code>POST</code></td><td><code>/graphql</code></td><td>Ask the shop for its products, orders or channels</td></tr><tr><td><code>GET</code></td><td><code>/store</code></td><td>The storefront of the shop</td></tr><tr><td><code>POST</code></td><td><code>/api/session</code></td><td>Sign in with the email and the password of an account</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Quick start</span>
+          <h2 style="margin:10px 0 12px">Run it locally</h2>
+<pre><code># pip install -r requirements.txt
+# python app.py                   # the shop and this site on port 5000
+# PORT=9000 python app.py         # the shop and this site on port 9000
+# pytest -q                       # 12 tests</code></pre>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">Live</span>
+          <h2 style="margin:10px 0 12px">The state of the running instance</h2>
+          <div class="stats" id="stats">
+            <div class="stat"><div class="value" data-stat="__status">—</div><div class="label">Status</div></div>
+            <div class="stat"><div class="value" data-stat="products">—</div><div class="label">Products</div></div><div class="stat"><div class="value" data-stat="orders">—</div><div class="label">Orders</div></div><div class="stat"><div class="value" data-stat="revenue">—</div><div class="label">Revenue</div></div><div class="stat"><div class="value" data-stat="open_orders">—</div><div class="label">Open orders</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Saleor — part of the Foundev portfolio.</span>
+    <span>Themed for commerce &amp; retail.</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

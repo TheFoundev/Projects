@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Traccar · Fleet tracking</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="mark">T</span><div><strong>Traccar</strong><small>Fleet tracking</small></div></div>
+  <div class="stats" id="stats"></div>
+</header>
+<main class="layout">
+  <aside class="panel">
+    <div class="row between"><h2>Devices</h2><button class="btn small" id="refresh">Refresh</button></div>
+    <div id="devices" class="devices"></div>
+    <form id="device-form" class="stack">
+      <h3>Register device</h3>
+      <input name="name" placeholder="Vehicle name" required>
+      <input name="uniqueId" placeholder="Unique ID" required>
+      <input name="model" placeholder="Model (optional)">
+      <button class="btn primary" type="submit">Add device</button>
+    </form>
+  </aside>
+  <section class="map-wrap">
+    <div id="map"></div>
+    <div class="legend">Click a device to draw its recent trail. Geofences are outlines.</div>
+  </section>
+  <aside class="panel">
+    <div class="row between"><h2>Simulate</h2><span class="badge" id="selected-label">no device</span></div>
+    <form id="position-form" class="stack">
+      <label>Latitude<input name="latitude" type="number" step="0.0001" value="51.5074" required></label>
+      <label>Longitude<input name="longitude" type="number" step="0.0001" value="-0.1278" required></label>
+      <label>Speed km/h<input name="speedKph" type="number" step="0.1" value="24"></label>
+      <button class="btn primary" type="submit">Send position</button>
+    </form>
+    <h3 style="margin-top:22px">Trips</h3>
+    <div id="trips" class="list muted">Select a device.</div>
+    <h3 style="margin-top:22px">Alerts</h3>
+    <div id="alerts" class="list"></div>
+  </aside>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="/app.js"></script>
+</body>
+</html>

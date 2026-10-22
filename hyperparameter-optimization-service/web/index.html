@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hyperparameter Search · Hyperparameter Search</title>
+<meta name="description" content="A random search over the hyperparameters of a random forest: every trial is fitted, scored with the accuracy and the F1, and written to a SQLite trial log, and the service answers with the best parameters that have been found so far.">
+<meta name="theme-color" content="hsl(256 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=ui-sans-serif,+system-ui,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">HS</span>
+    <span><strong>Hyperparameter Search</strong><small>Trials, scores and the best one so far</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="active">Overview</a><a href="console.html" class="">Console</a></nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">artificial intelligence</span>
+      <h1>Let the search try the space and keep the best.</h1>
+      <p class="lede">A random search over the hyperparameters of a random forest: every trial is fitted, scored with the accuracy and the F1, and written to a SQLite trial log, and the service answers with the best parameters that have been found so far.</p>
+      <div class="actions">
+        <a class="btn primary" href="console.html">Open the console</a>
+        <a class="btn" href="#how">How it works</a>
+        
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <span class="eyebrow">What it does</span>
+          <h2 style="margin-top:10px">The capabilities</h2>
+        </div>
+        <p class="lede" style="max-width:42ch">Every panel below is served by the real API of this project — nothing here is a mock-up.</p>
+      </div>
+      <div class="grid cols-3"><article class="card reveal">
+          <div class="icon">⌕</div>
+          <h3>A space of three knobs</h3>
+          <p>The number of trees, the depth and the size of the leaf are what the search moves.</p>
+        </article><article class="card reveal">
+          <div class="icon">▤</div>
+          <h3>Every trial is kept</h3>
+          <p>The parameters and the scores of every trial go into the SQLite log.</p>
+        </article><article class="card reveal">
+          <div class="icon">◈</div>
+          <h3>The best trial is one row</h3>
+          <p>The service answers with the parameters and the accuracy of the best trial.</p>
+        </article><article class="card reveal">
+          <div class="icon">⏱</div>
+          <h3>A seeded, repeatable search</h3>
+          <p>The same seed gives the same trials, so two runs can be compared.</p>
+        </article><article class="card reveal">
+          <div class="icon">◫</div>
+          <h3>A service, not a script</h3>
+          <p>FastAPI answers over HTTP on /search and on /trials.</p>
+        </article><article class="card reveal">
+          <div class="icon">⚠</div>
+          <h3>A small space, on one CPU</h3>
+          <p>There is no pruning, no workers and no persistent study server.</p>
+        </article></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Architecture</span>
+          <h2 style="margin:10px 0 12px">How it works</h2>
+          <p class="lede">The search space is three lists: the number of trees, the depth of the forest and the smallest number of samples in a leaf. Every trial draws a point from the space with a seeded generator, fits a random forest on the training split and scores it on the test split. The trial is appended to a SQLite table with its parameters, its accuracy and its F1, and the best accuracy seen so far is kept next to the parameters that produced it.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:18px"><span class="badge">Python</span><span class="badge">FastAPI</span><span class="badge">pydantic</span><span class="badge">NumPy</span><span class="badge">scikit-learn</span><span class="badge">SQLite</span></div>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">The API</span>
+          <h2 style="margin:10px 0 12px">Endpoints</h2>
+          <div class="panel">
+            <table>
+              <thead><tr><th>Method</th><th>Path</th><th>What it does</th></tr></thead>
+              <tbody><tr><td><code>GET</code></td><td><code>/api/summary</code></td><td>The number of trials, the best accuracy, the best F1 and the best parameters</td></tr><tr><td><code>GET</code></td><td><code>/api/trials</code></td><td>Every trial of the log with its parameters, its accuracy and its F1</td></tr><tr><td><code>POST</code></td><td><code>/api/search</code></td><td>Run a search of a given number of trials and answer with the metrics</td></tr><tr><td><code>GET</code></td><td><code>/trials</code></td><td>The trial list of the service, unchanged</td></tr><tr><td><code>GET</code></td><td><code>/console.html</code></td><td>The console of this site</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Quick start</span>
+          <h2 style="margin:10px 0 12px">Run it locally</h2>
+<pre><code># pip install -r requirements.txt
+# python main.py train                     # run a search and fill the trial log
+# uvicorn app:app --port 8205              # the service and this site
+# pytest -q                                # the test suite</code></pre>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">Live</span>
+          <h2 style="margin:10px 0 12px">The state of the running instance</h2>
+          <div class="stats" id="stats">
+            <div class="stat"><div class="value" data-stat="__status">—</div><div class="label">Status</div></div>
+            <div class="stat"><div class="value" data-stat="trials">—</div><div class="label">Trials</div></div><div class="stat"><div class="value" data-stat="best_accuracy">—</div><div class="label">Best accuracy</div></div><div class="stat"><div class="value" data-stat="best_f1">—</div><div class="label">Best F1</div></div><div class="stat"><div class="value" data-stat="parameters">—</div><div class="label">Parameters searched</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Hyperparameter Search — part of the Foundev portfolio.</span>
+    <span>Themed for artificial intelligence.</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "Peyara Remote Mouse",
+    "slug": "peyara-remote-mouse",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.foundev.peyararemotemouse"
+    },
+    "android": {
+      "package": "com.foundev.peyararemotemouse",
+      "adaptiveIcon": {
+        "backgroundColor": "#7c3aed"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hybrid Recommender · Hybrid Recommender</title>
+<meta name="description" content="A recommender that mixes two scores: a truncated SVD over the ratings of the users, and a content score built from the tag profile of the items each user rated highly. The mix is measured with the precision at five of the held-out ratings.">
+<meta name="theme-color" content="hsl(265 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=ui-sans-serif,+system-ui,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">HR</span>
+    <span><strong>Hybrid Recommender</strong><small>What you liked, and what the items are like</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="active">Overview</a><a href="console.html" class="">Console</a></nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">artificial intelligence</span>
+      <h1>Recommendations that know the item, not only the user.</h1>
+      <p class="lede">A recommender that mixes two scores: a truncated SVD over the ratings of the users, and a content score built from the tag profile of the items each user rated highly. The mix is measured with the precision at five of the held-out ratings.</p>
+      <div class="actions">
+        <a class="btn primary" href="console.html">Open the console</a>
+        <a class="btn" href="#how">How it works</a>
+        
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <span class="eyebrow">What it does</span>
+          <h2 style="margin-top:10px">The capabilities</h2>
+        </div>
+        <p class="lede" style="max-width:42ch">Every panel below is served by the real API of this project — nothing here is a mock-up.</p>
+      </div>
+      <div class="grid cols-3"><article class="card reveal">
+          <div class="icon">⩇</div>
+          <h3>Two scores, one list</h3>
+          <p>The latent factors of the SVD and the tag profile of the user are mixed.</p>
+        </article><article class="card reveal">
+          <div class="icon">⌗</div>
+          <h3>The tags of the item count</h3>
+          <p>An item can be scored from its tags, even when nobody rated it yet.</p>
+        </article><article class="card reveal">
+          <div class="icon">✂</div>
+          <h3>Seen items are removed</h3>
+          <p>The items the user already rated never come back in the list.</p>
+        </article><article class="card reveal">
+          <div class="icon">◔</div>
+          <h3>Precision at five, not recall</h3>
+          <p>The score is the share of the five recommendations that the test set agrees with.</p>
+        </article><article class="card reveal">
+          <div class="icon">◧</div>
+          <h3>The catalogue is readable</h3>
+          <p>Every item shows its title and the genres it carries.</p>
+        </article><article class="card reveal">
+          <div class="icon">⚠</div>
+          <h3>Simulated users and items</h3>
+          <p>The catalogue, the ratings and the preferences are all generated.</p>
+        </article></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Architecture</span>
+          <h2 style="margin:10px 0 12px">How it works</h2>
+          <p class="lede">The ratings are turned into a user by item matrix, and a truncated SVD with eight components gives every user and every item a latent factor; the dot product of the factors is the collaborative score. The tags of the items a user rated four or higher are averaged into a profile, and its cosine with the tags of the catalogue gives the content score. The two are mixed with 0.7 and 0.3, and the items the user already rated are removed before the top five is taken.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:18px"><span class="badge">Python</span><span class="badge">NumPy</span><span class="badge">pandas</span><span class="badge">scikit-learn</span><span class="badge">Truncated SVD</span><span class="badge">Content cosine</span></div>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">The API</span>
+          <h2 style="margin:10px 0 12px">Endpoints</h2>
+          <div class="panel">
+            <table>
+              <thead><tr><th>Method</th><th>Path</th><th>What it does</th></tr></thead>
+              <tbody><tr><td><code>GET</code></td><td><code>/api/summary</code></td><td>The precision at five, the number of users and the size of the two splits</td></tr><tr><td><code>GET</code></td><td><code>/api/recommendations</code></td><td>The five recommended items of a user, with their scores and their genres</td></tr><tr><td><code>POST</code></td><td><code>/api/recommend</code></td><td>Recommend for another user of the catalogue</td></tr><tr><td><code>POST</code></td><td><code>/api/train</code></td><td>Fit the hybrid scorer again and answer with the new precision</td></tr><tr><td><code>GET</code></td><td><code>/console.html</code></td><td>The console of this site</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Quick start</span>
+          <h2 style="margin:10px 0 12px">Run it locally</h2>
+<pre><code># pip install -r requirements.txt
+# python main.py train                     # fit the hybrid scorer
+# python main.py demo                      # the list of the first user
+# python3 web/server.py --port 8204       # this site
+# pytest -q                                # the test suite</code></pre>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">Live</span>
+          <h2 style="margin:10px 0 12px">The state of the running instance</h2>
+          <div class="stats" id="stats">
+            <div class="stat"><div class="value" data-stat="__status">—</div><div class="label">Status</div></div>
+            <div class="stat"><div class="value" data-stat="precision_at_5">—</div><div class="label">Precision@5</div></div><div class="stat"><div class="value" data-stat="users">—</div><div class="label">Users</div></div><div class="stat"><div class="value" data-stat="items">—</div><div class="label">Items</div></div><div class="stat"><div class="value" data-stat="train_ratings">—</div><div class="label">Train ratings</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Hybrid Recommender — part of the Foundev portfolio.</span>
+    <span>Themed for artificial intelligence.</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

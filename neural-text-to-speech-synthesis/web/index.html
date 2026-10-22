@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voxform · Voxform</title>
+<meta name="description" content="Voxform is a formant synthesiser: the text is turned into phonemes by a letter-to-sound engine, the duration model says how long every phoneme lasts, the prosody gives the pitch, and the result is written as a WAV file that is measured instead of praised.">
+<meta name="theme-color" content="hsl(257 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=ui-sans-serif,+system-ui,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">VF</span>
+    <span><strong>Voxform</strong><small>Speech written phoneme by phoneme</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="active">Overview</a><a href="console.html" class="">Console</a></nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">artificial intelligence</span>
+      <h1>Text in, a waveform out, and a number that says how close it is.</h1>
+      <p class="lede">Voxform is a formant synthesiser: the text is turned into phonemes by a letter-to-sound engine, the duration model says how long every phoneme lasts, the prosody gives the pitch, and the result is written as a WAV file that is measured instead of praised.</p>
+      <div class="actions">
+        <a class="btn primary" href="console.html">Open the console</a>
+        <a class="btn" href="#how">How it works</a>
+        
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <span class="eyebrow">What it does</span>
+          <h2 style="margin-top:10px">The capabilities</h2>
+        </div>
+        <p class="lede" style="max-width:42ch">Every panel below is served by the real API of this project — nothing here is a mock-up.</p>
+      </div>
+      <div class="grid cols-3"><article class="card reveal">
+          <div class="icon">✎</div>
+          <h3>A pronunciation of its own</h3>
+          <p>The letter-to-sound rules and the lexicon turn a word into the phonemes it is spoken with.</p>
+        </article><article class="card reveal">
+          <div class="icon">≋</div>
+          <h3>A time for every phoneme</h3>
+          <p>A model fitted on the corpus of the project says how long every sound lasts.</p>
+        </article><article class="card reveal">
+          <div class="icon">⩘</div>
+          <h3>A pitch that moves</h3>
+          <p>The pitch falls over a phrase, a question rises at the end and a stressed syllable is longer.</p>
+        </article><article class="card reveal">
+          <div class="icon">♪</div>
+          <h3>A file you can play</h3>
+          <p>The console writes a WAV file and plays the speech in the browser.</p>
+        </article><article class="card reveal">
+          <div class="icon">⌁</div>
+          <h3>A number instead of an opinion</h3>
+          <p>The formant error in hertz says how close the speech is to the phonemes that were asked for.</p>
+        </article><article class="card reveal">
+          <div class="icon">▤</div>
+          <h3>The corpus in a table</h3>
+          <p>Every phrase of the corpus is listed with its formant error.</p>
+        </article></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Architecture</span>
+          <h2 style="margin:10px 0 12px">How it works</h2>
+          <p class="lede">The engine is explicit in every stage. The letter-to-sound rules turn the letters of a word into phonemes, with a lexicon for the words the rules get wrong. A duration model, a linear regression over the length of a word and its number of syllables, gives the time of every phoneme, and a prosody model gives the pitch, the stress and the rise of a question. Every vowel is rendered with its three formants, every consonant with noise, a burst or a nasal murmur, and the evaluation measures the formant peaks of the synthesized vowels with an FFT and compares them with the targets of the phonemes.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:18px"><span class="badge">Python</span><span class="badge">NumPy</span><span class="badge">scikit-learn</span><span class="badge">Matplotlib</span><span class="badge">WAV codec</span><span class="badge">Standard library server</span></div>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">The API</span>
+          <h2 style="margin:10px 0 12px">Endpoints</h2>
+          <div class="panel">
+            <table>
+              <thead><tr><th>Method</th><th>Path</th><th>What it does</th></tr></thead>
+              <tbody><tr><td><code>GET</code></td><td><code>/api/summary</code></td><td>The error of the duration model and the formant error of the corpus</td></tr><tr><td><code>POST</code></td><td><code>/api/synthesize</code></td><td>Synthesize a phrase, write the WAV file and measure the formants</td></tr><tr><td><code>GET</code></td><td><code>/api/phonemes</code></td><td>The phonemes of a phrase, word by word</td></tr><tr><td><code>POST</code></td><td><code>/api/train</code></td><td>Fit the duration model again and answer with the new error</td></tr><tr><td><code>GET</code></td><td><code>/console.html</code></td><td>The console of this site</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Quick start</span>
+          <h2 style="margin:10px 0 12px">Run it locally</h2>
+<pre><code># pip install -r requirements.txt
+# python main.py train            # the error of the duration model
+# python main.py demo             # artifacts/tts_demo.wav and the waveform
+# pytest -q                       # 39 tests
+# python3 web/server.py --port 8304   # this site</code></pre>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">Live</span>
+          <h2 style="margin:10px 0 12px">The state of the running instance</h2>
+          <div class="stats" id="stats">
+            <div class="stat"><div class="value" data-stat="__status">—</div><div class="label">Status</div></div>
+            <div class="stat"><div class="value" data-stat="duration_mae">—</div><div class="label">Duration MAE</div></div><div class="stat"><div class="value" data-stat="formant_error_hz">—</div><div class="label">Formant error</div></div><div class="stat"><div class="value" data-stat="phrases">—</div><div class="label">Phrases</div></div><div class="stat"><div class="value" data-stat="sample_rate">—</div><div class="label">Sample rate</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Voxform — part of the Foundev portfolio.</span>
+    <span>Themed for artificial intelligence.</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+# Build and dependency files
+target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+
+# Local databases and logs
+*.mv.db
+*.trace.db
+/data/
+*.log
+
+# IDE and OS
+.idea/
+.vscode/
+*.iml
+.DS_Store

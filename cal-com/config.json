@@ -1,0 +1,109 @@
+{
+  "name": "Cal.com",
+  "tagline": "Scheduling without the back-and-forth",
+  "description": "Open scheduling infrastructure with booking pages, availability rules, team round-robin, calendar sync and video conferencing.",
+  "special": "booking",
+  "features": [
+    "Public booking page with live availability",
+    "Conflict-safe slot reservation backed by SQLite",
+    "Configurable event types and durations",
+    "Downloadable iCalendar export for hosts",
+    "JSON API for event types, availability and bookings"
+  ],
+  "publicRead": true,
+  "port": 3000,
+  "resources": [
+    {
+      "name": "event_types",
+      "label": "Event types",
+      "icon": "\u25f7",
+      "fields": [
+        {
+          "name": "name",
+          "required": true,
+          "type": "text",
+          "label": "Name"
+        },
+        {
+          "name": "slug",
+          "required": true,
+          "placeholder": "intro-call",
+          "type": "text",
+          "label": "Slug"
+        },
+        {
+          "name": "duration_minutes",
+          "type": "int",
+          "required": true,
+          "default": 30,
+          "label": "Duration Minutes"
+        },
+        {
+          "name": "description",
+          "multiline": true,
+          "type": "text",
+          "label": "Description"
+        }
+      ]
+    },
+    {
+      "name": "bookings",
+      "label": "Bookings",
+      "icon": "\u25a6",
+      "fields": [
+        {
+          "name": "event_type_id",
+          "type": "int",
+          "required": true,
+          "label": "Event type ID"
+        },
+        {
+          "name": "start_at",
+          "required": true,
+          "label": "Start (ISO)",
+          "type": "text"
+        },
+        {
+          "name": "booker_name",
+          "required": true,
+          "label": "Booker name",
+          "type": "text"
+        },
+        {
+          "name": "booker_email",
+          "required": true,
+          "label": "Booker email",
+          "type": "text"
+        },
+        {
+          "name": "notes",
+          "multiline": true,
+          "type": "text",
+          "label": "Notes"
+        },
+        {
+          "name": "status",
+          "default": "confirmed",
+          "type": "text",
+          "label": "Status"
+        }
+      ]
+    }
+  ],
+  "seed": {
+    "event_types": [
+      {
+        "name": "Intro call",
+        "slug": "intro-call",
+        "duration_minutes": 30,
+        "description": "A short conversation about your team and what you are trying to ship."
+      },
+      {
+        "name": "Strategy session",
+        "slug": "strategy-session",
+        "duration_minutes": 60,
+        "description": "A focused working session on architecture, delivery or product direction."
+      }
+    ]
+  }
+}

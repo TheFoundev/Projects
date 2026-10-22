@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Experiment Registry · Experiment Registry</title>
+<meta name="description" content="A small experiment tracker: three model configurations are fitted on the same split, every run is logged with its parameters, its accuracy, its F1 and the path of its artefact, and the registry answers with the run that scored best.">
+<meta name="theme-color" content="hsl(269 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=ui-sans-serif,+system-ui,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">ER</span>
+    <span><strong>Experiment Registry</strong><small>Runs, metrics and the model that won</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="active">Overview</a><a href="console.html" class="">Console</a></nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">artificial intelligence</span>
+      <h1>Every run is kept. The best one is found for you.</h1>
+      <p class="lede">A small experiment tracker: three model configurations are fitted on the same split, every run is logged with its parameters, its accuracy, its F1 and the path of its artefact, and the registry answers with the run that scored best.</p>
+      <div class="actions">
+        <a class="btn primary" href="console.html">Open the console</a>
+        <a class="btn" href="#how">How it works</a>
+        
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <span class="eyebrow">What it does</span>
+          <h2 style="margin-top:10px">The capabilities</h2>
+        </div>
+        <p class="lede" style="max-width:42ch">Every panel below is served by the real API of this project — nothing here is a mock-up.</p>
+      </div>
+      <div class="grid cols-3"><article class="card reveal">
+          <div class="icon">▣</div>
+          <h3>Three models, one split</h3>
+          <p>Logistic regression, a forest and boosting are compared on the same data.</p>
+        </article><article class="card reveal">
+          <div class="icon">▤</div>
+          <h3>Every run is a row</h3>
+          <p>The parameters, the accuracy, the F1 and the artefact path are logged in SQLite.</p>
+        </article><article class="card reveal">
+          <div class="icon">◈</div>
+          <h3>The best run is found by query</h3>
+          <p>The registry asks the table which run scored highest.</p>
+        </article><article class="card reveal">
+          <div class="icon">▣</div>
+          <h3>The artefact stays on disk</h3>
+          <p>Each model is pickled into artifacts/models.</p>
+        </article><article class="card reveal">
+          <div class="icon">◫</div>
+          <h3>The registry is an API</h3>
+          <p>FastAPI answers with the runs and with the best one.</p>
+        </article><article class="card reveal">
+          <div class="icon">⚠</div>
+          <h3>A table, not a governed registry</h3>
+          <p>There is no lineage, no approval and no remote store.</p>
+        </article></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Architecture</span>
+          <h2 style="margin:10px 0 12px">How it works</h2>
+          <p class="lede">A logistic regression, a random forest and a gradient boosting model are fitted on the same training split and scored on the same test split. Each of them is pickled into artifacts/models and appended to a SQLite table with its name, its parameters, its accuracy and its F1. The best run is the row with the highest accuracy, and the endpoint that answers it reads the table every time instead of keeping it in memory.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:18px"><span class="badge">Python</span><span class="badge">FastAPI</span><span class="badge">scikit-learn</span><span class="badge">pickle</span><span class="badge">SQLite registry</span></div>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">The API</span>
+          <h2 style="margin:10px 0 12px">Endpoints</h2>
+          <div class="panel">
+            <table>
+              <thead><tr><th>Method</th><th>Path</th><th>What it does</th></tr></thead>
+              <tbody><tr><td><code>GET</code></td><td><code>/api/summary</code></td><td>The number of runs, the best model and its accuracy and F1</td></tr><tr><td><code>GET</code></td><td><code>/api/runs</code></td><td>Every run of the registry with its parameters and its artefact</td></tr><tr><td><code>GET</code></td><td><code>/api/best</code></td><td>The best run of the registry</td></tr><tr><td><code>POST</code></td><td><code>/api/train</code></td><td>Fit the three models again and answer with the new metrics</td></tr><tr><td><code>GET</code></td><td><code>/runs</code></td><td>The run list of the service, unchanged</td></tr><tr><td><code>GET</code></td><td><code>/console.html</code></td><td>The console of this site</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Quick start</span>
+          <h2 style="margin:10px 0 12px">Run it locally</h2>
+<pre><code># pip install -r requirements.txt
+# python main.py train                     # fit the three models and log the runs
+# uvicorn app:app --port 8210              # the registry and this site
+# pytest -q                                # the test suite</code></pre>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">Live</span>
+          <h2 style="margin:10px 0 12px">The state of the running instance</h2>
+          <div class="stats" id="stats">
+            <div class="stat"><div class="value" data-stat="__status">—</div><div class="label">Status</div></div>
+            <div class="stat"><div class="value" data-stat="runs">—</div><div class="label">Runs</div></div><div class="stat"><div class="value" data-stat="best_model">—</div><div class="label">Best model</div></div><div class="stat"><div class="value" data-stat="best_accuracy">—</div><div class="label">Best accuracy</div></div><div class="stat"><div class="value" data-stat="best_f1">—</div><div class="label">Best F1</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Experiment Registry — part of the Foundev portfolio.</span>
+    <span>Themed for artificial intelligence.</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

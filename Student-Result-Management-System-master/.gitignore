@@ -1,0 +1,7 @@
+# Local database files
+data/
+*.sqlite
+
+# Environment
+.env
+.env.local

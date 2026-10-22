@@ -1,0 +1,14 @@
+{
+    "name": "foundev/wallabag",
+    "description": "Read-it-later service that saves articles and pages, extracts clean readable content, then supports tags, annotations, search and exports.",
+    "type": "project",
+    "require": {
+        "php": ">=8.2",
+        "ext-pdo": "*"
+    },
+    "scripts": {
+        "start": "php -S localhost:8000 -t public",
+        "test": "php tests/run.php"
+    },
+    "license": "MIT"
+}

@@ -1,0 +1,105 @@
+{
+  "name": "Medusa",
+  "tagline": "Composable commerce, small enough to read",
+  "description": "Composable headless commerce platform with products, carts, orders, inventory, promotions, regions and payment or shipping modules.",
+  "special": "commerce",
+  "features": [
+    "Product catalogue with integer-cent pricing",
+    "Stock-aware cart and checkout",
+    "Orders with line items and totals",
+    "Categories and inventory in one place",
+    "Dependency-free storefront UI"
+  ],
+  "publicRead": true,
+  "port": 3000,
+  "resources": [
+    {
+      "name": "products",
+      "label": "Products",
+      "icon": "\u25eb",
+      "fields": [
+        {
+          "name": "name",
+          "required": true,
+          "type": "text",
+          "label": "Name"
+        },
+        {
+          "name": "price_cents",
+          "type": "int",
+          "required": true,
+          "label": "Price (cents)",
+          "default": 2500
+        },
+        {
+          "name": "stock",
+          "type": "int",
+          "default": 10,
+          "label": "Stock"
+        },
+        {
+          "name": "category",
+          "default": "General",
+          "type": "text",
+          "label": "Category"
+        },
+        {
+          "name": "description",
+          "multiline": true,
+          "type": "text",
+          "label": "Description"
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "label": "Orders",
+      "icon": "\u25a6",
+      "fields": [
+        {
+          "name": "customer_email",
+          "required": true,
+          "label": "Customer email",
+          "type": "text"
+        },
+        {
+          "name": "total_cents",
+          "type": "int",
+          "default": 0,
+          "label": "Total (cents)"
+        },
+        {
+          "name": "status",
+          "default": "paid",
+          "type": "text",
+          "label": "Status"
+        }
+      ]
+    }
+  ],
+  "seed": {
+    "products": [
+      {
+        "name": "Everyday Tote",
+        "price_cents": 4200,
+        "stock": 18,
+        "category": "Bags",
+        "description": "Waxed canvas tote with an internal laptop sleeve."
+      },
+      {
+        "name": "Field Notebook",
+        "price_cents": 1200,
+        "stock": 40,
+        "category": "Stationery",
+        "description": "A5, dot grid, 120 gsm paper."
+      },
+      {
+        "name": "Desk Tray",
+        "price_cents": 2800,
+        "stock": 7,
+        "category": "Workspace",
+        "description": "Powder-coated steel tray for the small things."
+      }
+    ]
+  }
+}

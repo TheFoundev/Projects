@@ -1,0 +1,126 @@
+{
+  "name": "Zulip",
+  "tagline": "Threaded team chat organised by topic",
+  "description": "Threaded team chat organised by topics with streams, private messages, markdown, integrations and full-text search.",
+  "special": "chat",
+  "features": [
+    "Streams (channels) with topics on every message",
+    "Chronological message history per stream",
+    "Named authors and timestamps",
+    "Markdown-friendly plain-text message body",
+    "Session accounts with first-user ownership"
+  ],
+  "resources": [
+    {
+      "name": "channels",
+      "label": "Streams",
+      "description": "Public and private streams.",
+      "fields": [
+        {
+          "name": "name",
+          "required": true,
+          "type": "text",
+          "label": "Name"
+        },
+        {
+          "name": "topic",
+          "multiline": true,
+          "type": "text",
+          "label": "Topic"
+        },
+        {
+          "name": "private",
+          "type": "bool",
+          "default": 0,
+          "label": "Private"
+        },
+        {
+          "name": "description",
+          "multiline": true,
+          "type": "text",
+          "label": "Description"
+        }
+      ]
+    },
+    {
+      "name": "messages",
+      "label": "Messages",
+      "description": "Threaded messages with topics.",
+      "fields": [
+        {
+          "name": "channel_id",
+          "type": "int",
+          "required": true,
+          "label": "Stream ID"
+        },
+        {
+          "name": "sender",
+          "required": true,
+          "type": "text",
+          "label": "Sender"
+        },
+        {
+          "name": "topic",
+          "default": "general",
+          "type": "text",
+          "label": "Topic"
+        },
+        {
+          "name": "body",
+          "multiline": true,
+          "required": true,
+          "type": "text",
+          "label": "Body"
+        }
+      ]
+    }
+  ],
+  "seed": {
+    "channels": [
+      {
+        "name": "announce",
+        "topic": "Company-wide announcements",
+        "private": 0,
+        "description": "Read-only in spirit; keep it useful."
+      },
+      {
+        "name": "engineering",
+        "topic": "Builds, incidents and design decisions",
+        "private": 0,
+        "description": "Technical discussion with a topic per thread."
+      },
+      {
+        "name": "design",
+        "topic": "Critique and craft",
+        "private": 0,
+        "description": "Screens, flows and writing."
+      }
+    ],
+    "messages": [
+      {
+        "channel_id": 1,
+        "sender": "Rae",
+        "topic": "welcome",
+        "body": "Welcome to the workspace. Streams keep projects separate; topics keep each thread readable."
+      },
+      {
+        "channel_id": 2,
+        "sender": "Alex",
+        "topic": "deploy pipeline",
+        "body": "The cache fix is deployed. Median build time is down from 6m to 2m10s."
+      },
+      {
+        "channel_id": 2,
+        "sender": "Sam",
+        "topic": "deploy pipeline",
+        "body": "Excellent. I will add the new timing to the weekly ops note."
+      },
+      {
+        "channel_id": 3,
+        "sender": "Mina",
+        "topic": "empty states",
+        "body": "Proposal: every empty state gets one sentence of orientation and one clear action."
+      }
+    ]
+  }
+}

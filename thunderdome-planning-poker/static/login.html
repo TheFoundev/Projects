@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in · Thunderdome</title>
+<meta name="description" content="The sign-in portal of Thunderdome">
+<meta name="theme-color" content="hsl(273 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=ui-sans-serif,+system-ui,+-apple-system,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="/index.html">
+    <span class="mark">T</span>
+    <span><strong>Thunderdome</strong><small>Estimate together</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="">Overview</a><a href="console.html" class="">Console</a><a href="login.html" class="active">Sign in</a></nav>
+</header>
+
+<main id="main" class="auth">
+  <div class="auth-card">
+    <span class="mark">T</span>
+    <h1 style="font-size:1.6rem">Sign in</h1>
+    <p class="lede" style="margin:8px 0 20px;font-size:.95rem">A real-time planning poker, retrospective and stand-up server. The cards are pushed to every browser over server-sent events, so the room sees the same estimate at the same second.</p>
+    <form data-join-portal>
+      <div class="field"><label for="ls">Room id</label><input id="ls" name="session" placeholder="the id of the room" required></div>
+      <div class="field"><label for="ln">Your name</label><input id="ln" name="name" placeholder="Alex" required></div>
+      <div class="field"><label for="lt">Facilitator token (optional)</label><input id="lt" name="token" placeholder="only the facilitator has one"></div>
+      <button class="btn primary" type="submit" style="width:100%">Join the room</button>
+    </form>
+    <p class="hint" style="margin-top:16px">The room id is the last part of the address of the room. The facilitator token was shown once, when the room was opened.</p>
+    <script>
+      document.querySelector("[data-join-portal]").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const data = Object.fromEntries(new FormData(event.target).entries());
+        try {
+          const response = await fetch("/api/sessions/" + encodeURIComponent(data.session) + "/join", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: data.name, role: data.token ? "facilitator" : "player", token: data.token }),
+          });
+          const answer = await response.json();
+          if (!response.ok) throw new Error(answer.error || "Could not join the room.");
+          location.href = "/console.html#" + data.session;
+        } catch (error) {
+          window.alert(error.message);
+        }
+      });
+    </script>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap"><span>Thunderdome · sign in</span><span><a href="/index.html">Back to the overview</a></span></div>
+</footer>
+<script src="/assets/app.js"></script>
+</body>
+</html>

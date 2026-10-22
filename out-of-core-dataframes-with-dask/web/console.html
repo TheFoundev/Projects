@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Console · Strata</title>
+<meta name="description" content="Strata reads a partitioned set of order files without holding them in memory: every partition is read on its own, the group-by is done per partition and the partial results are merged, so only the small summary is ever kept whole.">
+<meta name="theme-color" content="hsl(181 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=ui-sans-serif,+system-ui,+-apple-system,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">ST</span>
+    <span><strong>Strata</strong><small>Sixty thousand rows, twenty in memory</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="">Overview</a><a href="console.html" class="active">Console</a></nav>
+</header>
+
+<main id="main" class="wrap">
+  <section>
+    <div class="head">
+      <div>
+        <span class="eyebrow">Console</span>
+        <h1 style="margin-top:10px;font-size:clamp(1.7rem,3.4vw,2.4rem)">Strata</h1>
+        <p class="lede" style="margin-top:8px">The rows that went through, the number of partitions, the rows that stayed in memory, and the summary the pipeline wrote: the revenue of every region and product.</p>
+      </div>
+      <div class="toolbar">
+        <button class="btn small" data-refresh>Refresh</button>
+        
+      </div>
+    </div>
+    <div class="stats reveal"><div class="stat"><div class="value" data-stat="input_rows">—</div><div class="label">Rows read</div></div><div class="stat"><div class="value" data-stat="partitions">—</div><div class="label">Partitions</div></div><div class="stat"><div class="value" data-stat="rows_in_memory">—</div><div class="label">Rows in memory</div></div><div class="stat"><div class="value" data-stat="total_revenue">—</div><div class="label">Revenue</div></div></div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="grid cols-2">
+      <section class="panel reveal">
+  <div class="panel-head"><h3>The merged summary</h3><span class="badge" data-panel-status>idle</span></div>
+  <div class="panel-body"><p class="lede" style="font-size:.92rem">The grouped rows the pipeline wrote: the orders and the revenue of every region and product.</p>
+<div class="panel" style="margin-top:14px;box-shadow:none">
+  <table>
+    <thead><tr><th>Region</th><th>Product</th><th>Orders</th><th>Revenue</th></tr></thead>
+    <tbody data-list="summary"></tbody>
+  </table>
+</div></div>
+</section><section class="panel reveal">
+  <div class="panel-head"><h3>The partitions on the disk</h3><span class="badge" data-panel-status>idle</span></div>
+  <div class="panel-body"><p class="lede" style="font-size:.92rem">Every input file of the run with the rows it holds and its size on disk.</p>
+<div class="panel" style="margin-top:14px;box-shadow:none">
+  <table>
+    <thead><tr><th>Partition</th><th>Rows</th><th>Bytes</th></tr></thead>
+    <tbody data-list="partitions"></tbody>
+  </table>
+</div></div>
+</section><section class="panel reveal">
+  <div class="panel-head"><h3>Run the pipeline again</h3><span class="badge" data-panel-status>idle</span></div>
+  <div class="panel-body"><p class="lede" style="font-size:.92rem">The partitions are written again, read again and grouped again; the console shows the new summary.</p>
+<form data-action style="margin-top:14px">
+  
+  <button class="btn primary" type="submit">Run the pipeline</button>
+</form>
+<div class="hint" style="margin-top:12px" data-action-result>The answer of the API will show up here.</div>
+<script>
+  document.querySelectorAll("[data-action]").forEach(function (form) {
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const result = form.querySelector("[data-action-result]");
+      const button = form.querySelector("button");
+      const data = Object.fromEntries(new FormData(form).entries());
+      button.disabled = true;
+      result.textContent = "working...";
+      try {
+        const response = await fetch("/api/run", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        const answer = await response.json();
+        if (!response.ok) throw new Error(answer.error || "the API refused the request");
+        result.textContent = Object.entries(answer)
+          .filter((entry) => typeof entry[1] !== "object")
+          .map((entry) => entry[0] + ": " + entry[1])
+          .join("  ·  ") || "done";
+        if (typeof load === "function") load();
+      } catch (error) {
+        result.textContent = error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+  });
+</script></div>
+</section>
+      
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Strata · console</span>
+    <span><a href="index.html">Back to the overview</a></span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("[data-refresh]").forEach(function (button) {
+    button.addEventListener("click", function () { location.reload(); });
+  });
+});
+</script>
+</body>
+</html>

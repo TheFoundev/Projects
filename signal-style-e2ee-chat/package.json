@@ -1,0 +1,14 @@
+{
+  "name": "signal-style-e2ee-chat",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An educational end-to-end encrypted chat that implements core Signal Protocol ideas over WebSockets.",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test",
+    "start": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

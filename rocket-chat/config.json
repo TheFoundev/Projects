@@ -1,0 +1,113 @@
+{
+  "name": "Rocket.Chat",
+  "tagline": "Team chat with channels and live updates",
+  "description": "Team communication platform with channels, direct messages, threads, file sharing, webhooks, bots and video conferencing.",
+  "special": "chat",
+  "features": [
+    "Channels with topics and membership metadata",
+    "Real-time message updates over server-sent events",
+    "Persistent message history",
+    "Named authors and timestamps",
+    "Direct-message-ready channel model"
+  ],
+  "publicRead": true,
+  "port": 3000,
+  "resources": [
+    {
+      "name": "channels",
+      "label": "Channels",
+      "icon": "#",
+      "fields": [
+        {
+          "name": "name",
+          "required": true,
+          "type": "text",
+          "label": "Name"
+        },
+        {
+          "name": "topic",
+          "multiline": true,
+          "type": "text",
+          "label": "Topic"
+        },
+        {
+          "name": "private",
+          "type": "bool",
+          "default": 0,
+          "label": "Private"
+        },
+        {
+          "name": "members",
+          "default": "team",
+          "type": "text",
+          "label": "Members"
+        }
+      ]
+    },
+    {
+      "name": "messages",
+      "label": "Messages",
+      "icon": "\u25a4",
+      "fields": [
+        {
+          "name": "channel_id",
+          "type": "int",
+          "required": true,
+          "label": "Channel ID"
+        },
+        {
+          "name": "author",
+          "required": true,
+          "type": "text",
+          "label": "Author"
+        },
+        {
+          "name": "body",
+          "multiline": true,
+          "required": true,
+          "type": "text",
+          "label": "Body"
+        }
+      ]
+    }
+  ],
+  "seed": {
+    "channels": [
+      {
+        "name": "general",
+        "topic": "Company-wide announcements and questions",
+        "private": 0,
+        "members": "everyone"
+      },
+      {
+        "name": "engineering",
+        "topic": "Builds, incidents and architecture",
+        "private": 0,
+        "members": "engineering"
+      },
+      {
+        "name": "random",
+        "topic": "Off-topic and show-and-tell",
+        "private": 0,
+        "members": "everyone"
+      }
+    ],
+    "messages": [
+      {
+        "channel_id": 1,
+        "author": "Rae",
+        "body": "Welcome to the new workspace. Introduce yourself in #random."
+      },
+      {
+        "channel_id": 2,
+        "author": "Alex",
+        "body": "Deploy pipeline is green again after the cache fix."
+      },
+      {
+        "channel_id": 2,
+        "author": "Sam",
+        "body": "Nice. I will re-run the load test this afternoon."
+      }
+    ]
+  }
+}
