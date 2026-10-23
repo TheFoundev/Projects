@@ -1,0 +1,79 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock title %} · LeafLens — Field Diagnostic Notebook</title>
+    <meta name="description" content="LeafLens: a CNN image classifier for plant leaf disease detection — 15 categories for agricultural monitoring.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,600;1,500&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+    <a class="skip-link" href="#page-main">Skip to content</a>
+
+    <header class="site-head">
+      <nav class="nav" aria-label="Main navigation">
+        <a class="brand" href="/">
+          <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+            <path d="M20 4C11 8 6 15 6 24c0 6 4 11 10 11 9 0 15-8 15-19 0-4-1-8-3-12-2 6-5 10-9 13 1-7-1-11-9-13z"></path>
+            <path d="M14 30c3-6 7-10 12-13" class="brand-vein"></path>
+          </svg>
+          <span class="brand-text">
+            <span class="brand-name">LeafLens</span>
+            <span class="brand-sub">field diagnostic notebook</span>
+          </span>
+        </a>
+
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="nav-toggle-icon">
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+        </button>
+
+        <ul class="nav-menu" id="nav-menu">
+          {% url 'home' as home_url %}
+          {% url 'about' as about_url %}
+          {% url 'services' as services_url %}
+          {% url 'contact' as contact_url %}
+          <li><a class="nav-link{% if request.path == home_url %} is-current{% endif %}" href="{{ home_url }}"{% if request.path == home_url %} aria-current="page"{% endif %}>Home</a></li>
+          <li><a class="nav-link{% if request.path == about_url %} is-current{% endif %}" href="{{ about_url }}"{% if request.path == about_url %} aria-current="page"{% endif %}>About</a></li>
+          <li><a class="nav-link{% if request.path == services_url %} is-current{% endif %}" href="{{ services_url }}"{% if request.path == services_url %} aria-current="page"{% endif %}>Services</a></li>
+          <li><a class="nav-link{% if request.path == contact_url %} is-current{% endif %}" href="{{ contact_url }}"{% if request.path == contact_url %} aria-current="page"{% endif %}>Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="page-main" id="page-main">
+      {% block body %}{% endblock body %}
+    </main>
+
+    <footer class="site-foot">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <p class="foot-title">LeafLens</p>
+          <p class="foot-note">Plant-leaf disease detection using deep learning — a CNN classifier over fifteen categories, aimed at automatic symptom monitoring across large fields of crops.</p>
+        </div>
+        <div class="foot-links">
+          <p class="foot-label">Notebook pages</p>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/services">Services</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/admin/">Admin</a></li>
+          </ul>
+        </div>
+        <div class="foot-status">
+          <p class="foot-label">Build status</p>
+          <p class="status-chip status-chip-warn">Frontend preview · CNN backend not wired</p>
+          <p class="foot-small">This Django project ships views for pages only. Image diagnosis needs the trained network, which is not included in this repository.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="{% static 'js/app.js' %}"></script>
+  </body>
+</html>
