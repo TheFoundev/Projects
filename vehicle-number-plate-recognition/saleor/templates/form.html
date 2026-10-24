@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if editing else 'New' }} {{ resource.label }} · {{ config.name }}{% endblock %}
+{% block content %}
+<div class="card form-card">
+  <h1>{{ 'Edit' if editing else 'New' }} {{ resource.label }}</h1>
+  {% for error in errors %}<div class="flash error">{{ error }}</div>{% endfor %}
+  <form method="post">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    {% for f in resource.fields %}
+    <div class="field">
+      <label for="f_{{ f.name }}">{{ f.label or f.name }}{% if f.required %} *{% endif %}</label>
+      {% set value = item.get(f.name, '') %}
+      {% if f.type == 'text' and f.multiline %}
+        <textarea id="f_{{ f.name }}" name="{{ f.name }}" rows="6">{{ value or '' }}</textarea>
+      {% elif f.options %}
+        <select id="f_{{ f.name }}" name="{{ f.name }}">{% for option in f.options %}<option value="{{ option }}" {% if value|string == option|string %}selected{% endif %}>{{ option }}</option>{% endfor %}</select>
+      {% elif f.type == 'bool' %}
+        <input type="checkbox" id="f_{{ f.name }}" name="{{ f.name }}" value="1" {% if value %}checked{% endif %}>
+      {% else %}
+        <input id="f_{{ f.name }}" name="{{ f.name }}" type="{{ 'number' if f.type in ['int','real'] else 'text' }}" step="{{ 'any' if f.type == 'real' else '' }}" value="{{ value or '' }}">
+      {% endif %}
+    </div>
+    {% endfor %}
+    <button class="btn primary" type="submit">Save</button>
+    <a class="btn" href="{{ url_for('resource_list', name=resource.name) }}">Cancel</a>
+  </form>
+</div>
+{% endblock %}

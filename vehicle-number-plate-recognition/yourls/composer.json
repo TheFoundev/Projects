@@ -1,0 +1,14 @@
+{
+    "name": "foundev/yourls",
+    "description": "Self-hosted URL shortener with custom keywords, click statistics, plugins, an API and a bookmarklet for generating links.",
+    "type": "project",
+    "require": {
+        "php": ">=8.2",
+        "ext-pdo": "*"
+    },
+    "scripts": {
+        "start": "php -S localhost:8000 -t public",
+        "test": "php tests/run.php"
+    },
+    "license": "MIT"
+}

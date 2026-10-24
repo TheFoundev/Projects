@@ -1,0 +1,14 @@
+﻿{
+    "id":  "college-faq-chatbot-rag",
+    "name":  "College FAQ Chatbot (RAG)",
+    "domain":  "Artificial Intelligence \u0026 Machine Learning",
+    "repository":  "https://github.com/aishwarya-nagothu/College-FAQ-RAG-Chatbot",
+    "stack":  "Python; LangChain; FAISS; FastAPI",
+    "goal":  "Chunk college documents, embeddings retrieval, cited answers and fallback handling.",
+    "license":  "Unknown",
+    "licenseWarning":  null,
+    "entry":  "app/__init__.py",
+    "expectedFileCount":  23,
+    "downloadStatus":  "success",
+    "downloadedFileCount":  31
+}

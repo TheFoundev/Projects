@@ -1,0 +1,14 @@
+﻿{
+    "id":  "currency-note-recognition-for-visually-impaired",
+    "name":  "Currency Note Recognition for Visually Impaired",
+    "domain":  "Artificial Intelligence \u0026 Machine Learning",
+    "repository":  "https://github.com/deveshwar7/Currency-Detector-System-for-visually-impaired-people-using-PYTHON-OPENCV-COMPUTER-VISION",
+    "stack":  "Python; CNN; TTS",
+    "goal":  "Classify denomination from camera and speak the value; also an audio-assist app.",
+    "license":  "Unknown",
+    "licenseWarning":  null,
+    "entry":  "Currency Detection using OpenCV in ML/detect.py",
+    "expectedFileCount":  3,
+    "downloadStatus":  "success",
+    "downloadedFileCount":  76
+}

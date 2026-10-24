@@ -1,0 +1,14 @@
+{
+    "name": "foundev/bookstack",
+    "description": "Documentation wiki that organises pages into shelves, books and chapters with WYSIWYG editing, versioning, search and role permissions.",
+    "type": "project",
+    "require": {
+        "php": ">=8.2",
+        "ext-pdo": "*"
+    },
+    "scripts": {
+        "start": "php -S localhost:8000 -t public",
+        "test": "php tests/run.php"
+    },
+    "license": "MIT"
+}

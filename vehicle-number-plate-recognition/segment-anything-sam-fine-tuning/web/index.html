@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Promptable · Promptable</title>
+<meta name="description" content="Promptable segments an object out of a picture from a prompt: a point on the object, a box around it or a mask, and the answer is the mask of that object, its bounding box and its overlap with the truth.">
+<meta name="theme-color" content="hsl(249 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=ui-sans-serif,+system-ui,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">Pm</span>
+    <span><strong>Promptable</strong><small>Cut an object out of a picture with one click</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="active">Overview</a><a href="console.html" class="">Console</a></nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">artificial intelligence</span>
+      <h1>A point on the picture, and the object it points at.</h1>
+      <p class="lede">Promptable segments an object out of a picture from a prompt: a point on the object, a box around it or a mask, and the answer is the mask of that object, its bounding box and its overlap with the truth.</p>
+      <div class="actions">
+        <a class="btn primary" href="console.html">Open the console</a>
+        <a class="btn" href="#how">How it works</a>
+        
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <span class="eyebrow">What it does</span>
+          <h2 style="margin-top:10px">The capabilities</h2>
+        </div>
+        <p class="lede" style="max-width:42ch">Every panel below is served by the real API of this project — nothing here is a mock-up.</p>
+      </div>
+      <div class="grid cols-3"><article class="card reveal">
+          <div class="icon">◆</div>
+          <h3>A point is enough</h3>
+          <p>Click a pixel on the object and the mask of the object comes back.</p>
+        </article><article class="card reveal">
+          <div class="icon">▤</div>
+          <h3>A box works as well</h3>
+          <p>A box around the object selects the region that overlaps it the most.</p>
+        </article><article class="card reveal">
+          <div class="icon">⛨</div>
+          <h3>The mask travels as a run length</h3>
+          <p>The mask is encoded, so it can be sent through JSON without a picture.</p>
+        </article><article class="card reveal">
+          <div class="icon">✓</div>
+          <h3>The overlap with the truth</h3>
+          <p>The IoU of the predicted mask and the true mask says how good the answer is.</p>
+        </article><article class="card reveal">
+          <div class="icon">◑</div>
+          <h3>A model that is fine tuned</h3>
+          <p>The threshold and the growth of the mask are fitted on the training pictures, not fixed by hand.</p>
+        </article><article class="card reveal">
+          <div class="icon">↻</div>
+          <h3>A new fine tuning on demand</h3>
+          <p>The console fits the decoder again and shows the loss of the new run.</p>
+        </article></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Architecture</span>
+          <h2 style="margin:10px 0 12px">How it works</h2>
+          <p class="lede">The model has the two parts of a promptable segmenter. The encoder turns the picture into an embedding that holds the probability of every pixel and the labels of the connected bright regions; the decoder takes the embedding and the prompt and answers with the mask of the region the prompt points at. The parameters of the decoder, the brightness threshold and the growth of the mask, are fitted with a coordinate descent on the training pictures, and the loss of the run is one minus the mean IoU.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:18px"><span class="badge">Python</span><span class="badge">NumPy</span><span class="badge">SciPy</span><span class="badge">FastAPI</span><span class="badge">Uvicorn</span><span class="badge">Connected components</span></div>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">The API</span>
+          <h2 style="margin:10px 0 12px">Endpoints</h2>
+          <div class="panel">
+            <table>
+              <thead><tr><th>Method</th><th>Path</th><th>What it does</th></tr></thead>
+              <tbody><tr><td><code>GET</code></td><td><code>/api/summary</code></td><td>The metrics of the model, the threshold it learned and the IoU of every picture</td></tr><tr><td><code>GET</code></td><td><code>/api/info</code></td><td>What the service is and which prompts it takes</td></tr><tr><td><code>GET</code></td><td><code>/api/predictions</code></td><td>The prompt point, the pixels and the IoU of every picture of the set</td></tr><tr><td><code>POST</code></td><td><code>/api/train</code></td><td>Fine tune the decoder again and answer with the new metrics</td></tr><tr><td><code>POST</code></td><td><code>/segment</code></td><td>Segment a picture with a point, a box or a mask</td></tr><tr><td><code>GET</code></td><td><code>/console.html</code></td><td>The console of this site</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Quick start</span>
+          <h2 style="margin:10px 0 12px">Run it locally</h2>
+<pre><code># pip install -r requirements.txt
+# python main.py train            # the metrics of the model
+# python main.py demo             # the picture, the mask and the truth
+# uvicorn app:app --port 9004    # the service and this site
+# pytest -q                       # 11 tests</code></pre>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">Live</span>
+          <h2 style="margin:10px 0 12px">The state of the running instance</h2>
+          <div class="stats" id="stats">
+            <div class="stat"><div class="value" data-stat="__status">—</div><div class="label">Status</div></div>
+            <div class="stat"><div class="value" data-stat="mean_iou">—</div><div class="label">Mean IoU</div></div><div class="stat"><div class="value" data-stat="loss">—</div><div class="label">Loss</div></div><div class="stat"><div class="value" data-stat="threshold">—</div><div class="label">Threshold</div></div><div class="stat"><div class="value" data-stat="bias">—</div><div class="label">Mask growth</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Promptable — part of the Foundev portfolio.</span>
+    <span>Themed for artificial intelligence.</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Console · Subscriptions</title>
+<meta name="description" content="Subscriptions works out the numbers of a subscription business: the monthly revenue, the yearly run rate, the active customers, the average fee, the churn and the net revenue retention, with the revenue of every month and the cohorts of the customers.">
+<meta name="theme-color" content="hsl(188 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=ui-sans-serif,+system-ui,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">Su</span>
+    <span><strong>Subscriptions</strong><small>The revenue of a subscription business</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="">Overview</a><a href="console.html" class="active">Console</a></nav>
+</header>
+
+<main id="main" class="wrap">
+  <section>
+    <div class="head">
+      <div>
+        <span class="eyebrow">Console</span>
+        <h1 style="margin-top:10px;font-size:clamp(1.7rem,3.4vw,2.4rem)">Subscriptions</h1>
+        <p class="lede" style="margin-top:8px">The MRR, the ARR, the active customers and the churn of the running instance, the revenue of every month and the MRR of every segment.</p>
+      </div>
+      <div class="toolbar">
+        <button class="btn small" data-refresh>Refresh</button>
+        
+      </div>
+    </div>
+    <div class="stats reveal"><div class="stat"><div class="value" data-stat="mrr">—</div><div class="label">MRR</div></div><div class="stat"><div class="value" data-stat="arr">—</div><div class="label">ARR</div></div><div class="stat"><div class="value" data-stat="active">—</div><div class="label">Active customers</div></div><div class="stat"><div class="value" data-stat="churn_rate">—</div><div class="label">Churn %</div></div></div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="grid cols-2">
+      <section class="panel reveal">
+  <div class="panel-head"><h3>The revenue of every month</h3><span class="badge" data-panel-status>idle</span></div>
+  <div class="panel-body"><p class="lede" style="font-size:.92rem">The MRR, the number of active customers, the new and the churned subscriptions of every month.</p>
+<div class="panel" style="margin-top:14px;box-shadow:none">
+  <table>
+    <thead><tr><th>Month</th><th>MRR</th><th>Customers</th><th>New</th><th>Churned</th></tr></thead>
+    <tbody data-list="monthly"></tbody>
+  </table>
+</div></div>
+</section><section class="panel reveal">
+  <div class="panel-head"><h3>The revenue per segment</h3><span class="badge" data-panel-status>idle</span></div>
+  <div class="panel-body"><p class="lede" style="font-size:.92rem">The MRR and the number of customers of every segment.</p>
+<div class="panel" style="margin-top:14px;box-shadow:none">
+  <table>
+    <thead><tr><th>Segment</th><th>Customers</th><th>MRR</th></tr></thead>
+    <tbody data-list="segments"></tbody>
+  </table>
+</div></div>
+</section><section class="panel reveal">
+  <div class="panel-head"><h3>The Streamlit page of the project</h3><span class="badge" data-panel-status>idle</span></div>
+  <div class="panel-body"><p class="lede" style="font-size:.92rem">The page of the project is a Streamlit application with the filters of the segment, the region and the months. It is still the product of this project and it is reachable at <code>/app</code>.</p>
+<div class="actions" style="margin-top:14px">
+  <a class="btn primary" href="app">Open the Streamlit page</a>
+</div>
+<div class="hint" style="margin-top:14px">The server of the page listens on the port 9013; the link above goes there when the page is running.</div></div>
+</section>
+      
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Subscriptions · console</span>
+    <span><a href="index.html">Back to the overview</a></span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("[data-refresh]").forEach(function (button) {
+    button.addEventListener("click", function () { location.reload(); });
+  });
+});
+</script>
+</body>
+</html>

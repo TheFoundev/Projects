@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Channels</h1>
+<p class="muted">Pick a channel to read and post. A channel is a stream; every message in it belongs to a topic.</p>
+<div class="grid">
+{% for entry in summary %}
+  <a class="card" href="{{ url_for('channel', channel_id=entry.stream.id) }}" style="color:inherit;text-decoration:none">
+    <h3># {{ entry.stream.name }}</h3>
+    <p class="muted small">{{ entry.stream.topic or entry.stream.description or '' }}</p>
+    <p class="muted small">{{ entry.messages }} messages · {{ entry.topics }} topics</p>
+    <span class="badge">{{ 'private' if entry.stream.private else 'public' }}</span>
+    {% if entry.unread %}<span class="badge">unread</span>{% endif %}
+  </a>
+{% endfor %}
+</div>
+{% endblock %}

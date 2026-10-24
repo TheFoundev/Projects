@@ -1,0 +1,7 @@
+numpy>=1.26
+pandas>=2.0
+matplotlib>=3.8
+flask>=3.0
+praw>=7.7
+vaderSentiment>=3.3
+pytest>=8.0

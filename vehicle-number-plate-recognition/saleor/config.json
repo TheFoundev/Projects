@@ -1,0 +1,103 @@
+{
+  "name": "Saleor",
+  "tagline": "GraphQL-first commerce for growing catalogues",
+  "description": "GraphQL-first e-commerce platform with catalogue, checkout, order management, discounts, warehouses and an admin dashboard.",
+  "special": "commerce",
+  "features": [
+    "Product catalogue with stock and integer-cent pricing",
+    "Session cart, stock validation and atomic checkout",
+    "Orders with line-item snapshots",
+    "Minimal GraphQL endpoint for products, orders and channels",
+    "Server-rendered storefront and admin resource views"
+  ],
+  "resources": [
+    {
+      "name": "products",
+      "label": "Products",
+      "description": "Catalogue and inventory.",
+      "fields": [
+        {
+          "name": "name",
+          "required": true,
+          "type": "text",
+          "label": "Name"
+        },
+        {
+          "name": "price_cents",
+          "type": "int",
+          "required": true,
+          "label": "Price (cents)",
+          "default": 2500
+        },
+        {
+          "name": "stock",
+          "type": "int",
+          "default": 10,
+          "label": "Stock"
+        },
+        {
+          "name": "category",
+          "default": "General",
+          "type": "text",
+          "label": "Category"
+        },
+        {
+          "name": "description",
+          "multiline": true,
+          "type": "text",
+          "label": "Description"
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "label": "Orders",
+      "description": "Checkout records.",
+      "fields": [
+        {
+          "name": "customer_email",
+          "required": true,
+          "label": "Customer email",
+          "type": "text"
+        },
+        {
+          "name": "total_cents",
+          "type": "int",
+          "default": 0,
+          "label": "Total (cents)"
+        },
+        {
+          "name": "status",
+          "default": "paid",
+          "type": "text",
+          "label": "Status"
+        }
+      ]
+    }
+  ],
+  "seed": {
+    "products": [
+      {
+        "name": "Linen Shirt",
+        "price_cents": 6800,
+        "stock": 14,
+        "category": "Apparel",
+        "description": "Relaxed fit, garment-dyed linen."
+      },
+      {
+        "name": "Ceramic Mug",
+        "price_cents": 1800,
+        "stock": 30,
+        "category": "Home",
+        "description": "Stoneware mug with a speckled glaze."
+      },
+      {
+        "name": "Canvas Cap",
+        "price_cents": 3200,
+        "stock": 9,
+        "category": "Accessories",
+        "description": "Six-panel cap with an embroidered mark."
+      }
+    ]
+  }
+}

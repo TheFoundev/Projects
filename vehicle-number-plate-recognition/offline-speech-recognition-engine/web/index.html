@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quietword · Quietword</title>
+<meta name="description" content="Quietword recognizes spoken commands without a network and without a neural network: a word becomes a short tone pair, the sound is cut into frames of log-band features, and the frame sequence is matched against the templates of the vocabulary with a dynamic time warping distance.">
+<meta name="theme-color" content="hsl(265 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=ui-sans-serif,+system-ui,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">QW</span>
+    <span><strong>Quietword</strong><small>Command words, heard offline</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="active">Overview</a><a href="console.html" class="">Console</a></nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">artificial intelligence</span>
+      <h1>Eight command words, heard without a network.</h1>
+      <p class="lede">Quietword recognizes spoken commands without a network and without a neural network: a word becomes a short tone pair, the sound is cut into frames of log-band features, and the frame sequence is matched against the templates of the vocabulary with a dynamic time warping distance.</p>
+      <div class="actions">
+        <a class="btn primary" href="console.html">Open the console</a>
+        <a class="btn" href="#how">How it works</a>
+        
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <span class="eyebrow">What it does</span>
+          <h2 style="margin-top:10px">The capabilities</h2>
+        </div>
+        <p class="lede" style="max-width:42ch">Every panel below is served by the real API of this project — nothing here is a mock-up.</p>
+      </div>
+      <div class="grid cols-3"><article class="card reveal">
+          <div class="icon">♪</div>
+          <h3>Eight command words</h3>
+          <p>The vocabulary is eight words, each with its own pair of tones and its own length.</p>
+        </article><article class="card reveal">
+          <div class="icon">⌁</div>
+          <h3>Sound turned into frames</h3>
+          <p>Sixteen frames of eight log bands are the features the matcher reads.</p>
+        </article><article class="card reveal">
+          <div class="icon">⩔</div>
+          <h3>A warping distance</h3>
+          <p>The match follows the cheapest path through the frames, so the speed of the speech does not matter.</p>
+        </article><article class="card reveal">
+          <div class="icon">✓</div>
+          <h3>An accuracy per word</h3>
+          <p>The console shows how often every word of the vocabulary is named right.</p>
+        </article><article class="card reveal">
+          <div class="icon">◑</div>
+          <h3>A word it has never heard</h3>
+          <p>The console makes a fresh sample and shows the ranking of the templates.</p>
+        </article><article class="card reveal">
+          <div class="icon">⊘</div>
+          <h3>No network, no model file</h3>
+          <p>Everything runs in the process of the server, with NumPy alone.</p>
+        </article></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Architecture</span>
+          <h2 style="margin:10px 0 12px">How it works</h2>
+          <p class="lede">Every word of the vocabulary has its own pair of tones and its own length, so the sound of a word is a short envelope over three sine waves. The signal is cut into sixteen frames and the spectrum of every frame is pooled into eight log bands, which gives the vector the matcher works with. The templates of the vocabulary are the shortest recording of every word, and the distance between two frame sequences is the cost of the cheapest warping path between them, so a word that is spoken a little faster still matches.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:18px"><span class="badge">Python</span><span class="badge">NumPy</span><span class="badge">Dynamic time warping</span><span class="badge">FFT log bands</span><span class="badge">Standard library server</span></div>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">The API</span>
+          <h2 style="margin:10px 0 12px">Endpoints</h2>
+          <div class="panel">
+            <table>
+              <thead><tr><th>Method</th><th>Path</th><th>What it does</th></tr></thead>
+              <tbody><tr><td><code>GET</code></td><td><code>/api/summary</code></td><td>The accuracy on the held-out samples and the accuracy of every word</td></tr><tr><td><code>POST</code></td><td><code>/api/recognize</code></td><td>Make a fresh sample of a word and rank the templates of the vocabulary</td></tr><tr><td><code>POST</code></td><td><code>/api/train</code></td><td>Fit the templates again and answer with the new accuracy</td></tr><tr><td><code>GET</code></td><td><code>/console.html</code></td><td>The console of this site</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Quick start</span>
+          <h2 style="margin:10px 0 12px">Run it locally</h2>
+<pre><code># pip install -r requirements.txt
+# python main.py train            # the accuracy on the test split
+# python main.py demo             # the ranking of the templates
+# pytest -q                       # 5 tests
+# python3 web/server.py --port 8305   # this site</code></pre>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">Live</span>
+          <h2 style="margin:10px 0 12px">The state of the running instance</h2>
+          <div class="stats" id="stats">
+            <div class="stat"><div class="value" data-stat="__status">—</div><div class="label">Status</div></div>
+            <div class="stat"><div class="value" data-stat="accuracy">—</div><div class="label">Accuracy</div></div><div class="stat"><div class="value" data-stat="vocabulary">—</div><div class="label">Words</div></div><div class="stat"><div class="value" data-stat="test_samples">—</div><div class="label">Test samples</div></div><div class="stat"><div class="value" data-stat="frames">—</div><div class="label">Frames</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Quietword — part of the Foundev portfolio.</span>
+    <span>Themed for artificial intelligence.</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resume Screening · Resume Screening</title>
+<meta name="description" content="A resume screening pipeline: the facts of a resume are parsed out of its text, a logistic regression scores every candidate against the job, and the questions of the interview are drafted from what the resume actually says.">
+<meta name="theme-color" content="hsl(270 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=ui-sans-serif,+system-ui,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">RS</span>
+    <span><strong>Resume Screening</strong><small>Rank the resumes against the job</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="active">Overview</a><a href="console.html" class="">Console</a></nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">artificial intelligence</span>
+      <h1>The shortlist, before the first interview.</h1>
+      <p class="lede">A resume screening pipeline: the facts of a resume are parsed out of its text, a logistic regression scores every candidate against the job, and the questions of the interview are drafted from what the resume actually says.</p>
+      <div class="actions">
+        <a class="btn primary" href="console.html">Open the console</a>
+        <a class="btn" href="#how">How it works</a>
+        
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <span class="eyebrow">What it does</span>
+          <h2 style="margin-top:10px">The capabilities</h2>
+        </div>
+        <p class="lede" style="max-width:42ch">Every panel below is served by the real API of this project — nothing here is a mock-up.</p>
+      </div>
+      <div class="grid cols-3"><article class="card reveal">
+          <div class="icon">⌕</div>
+          <h3>A resume read for facts</h3>
+          <p>The years, the degree, the number of the projects and the skills are taken out of the text of the resume.</p>
+        </article><article class="card reveal">
+          <div class="icon">⚖</div>
+          <h3>A score, not a guess</h3>
+          <p>A logistic regression gives every candidate the probability of being worth the interview.</p>
+        </article><article class="card reveal">
+          <div class="icon">✂</div>
+          <h3>The shortlist</h3>
+          <p>The candidates are ranked and the ones the model wants to talk to are marked.</p>
+        </article><article class="card reveal">
+          <div class="icon">?</div>
+          <h3>Questions from the resume</h3>
+          <p>A question for every skill the resume mentions and for every skill of the job it does not.</p>
+        </article><article class="card reveal">
+          <div class="icon">▤</div>
+          <h3>One dashboard</h3>
+          <p>The candidates, their score and the precision and the recall of the model are on one page.</p>
+        </article><article class="card reveal">
+          <div class="icon">⛁</div>
+          <h3>Nothing leaves the machine</h3>
+          <p>The resumes are synthetic and the candidates stay in a SQLite file next to the project.</p>
+        </article></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Architecture</span>
+          <h2 style="margin:10px 0 12px">How it works</h2>
+          <p class="lede">The parser reads the years, the degree, the number of the projects and the skills out of the text of the resume. The text and those numbers go into a TF-IDF matrix that a logistic regression scores, and every candidate gets the probability of being shortlisted. The candidates and their scores are stored in SQLite, and the questions of the interview are drafted from the skills of the resume and from the words of the job it does not mention.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:18px"><span class="badge">Python</span><span class="badge">scikit-learn</span><span class="badge">Flask</span><span class="badge">SQLite</span><span class="badge">TF-IDF and logistic regression</span></div>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">The API</span>
+          <h2 style="margin:10px 0 12px">Endpoints</h2>
+          <div class="panel">
+            <table>
+              <thead><tr><th>Method</th><th>Path</th><th>What it does</th></tr></thead>
+              <tbody><tr><td><code>GET</code></td><td><code>/api/summary</code></td><td>The state of the instance: the candidates, the shortlist, the precision and the recall</td></tr><tr><td><code>GET</code></td><td><code>/api/candidates</code></td><td>The candidates of the test set with their score, best first</td></tr><tr><td><code>GET</code></td><td><code>/api/questions</code></td><td>The questions of the interview, drafted from the best candidate</td></tr><tr><td><code>POST</code></td><td><code>/api/train</code></td><td>Fit the classifier again and answer with the new metrics</td></tr><tr><td><code>GET</code></td><td><code>/candidates</code></td><td>The dashboard of the project, with the table of the candidates</td></tr><tr><td><code>GET</code></td><td><code>/assets/theme.css</code></td><td>The design system of this site</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Quick start</span>
+          <h2 style="margin:10px 0 12px">Run it locally</h2>
+<pre><code># pip install -r requirements.txt
+# python main.py train        # fit the classifier and fill candidates.db
+# python app.py              # the site and the API on http://127.0.0.1:5000
+# pytest -q                  # the test suite</code></pre>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">Live</span>
+          <h2 style="margin:10px 0 12px">The state of the running instance</h2>
+          <div class="stats" id="stats">
+            <div class="stat"><div class="value" data-stat="__status">—</div><div class="label">Status</div></div>
+            <div class="stat"><div class="value" data-stat="candidates">—</div><div class="label">Candidates</div></div><div class="stat"><div class="value" data-stat="shortlisted">—</div><div class="label">Shortlisted</div></div><div class="stat"><div class="value" data-stat="precision">—</div><div class="label">Precision</div></div><div class="stat"><div class="value" data-stat="recall">—</div><div class="label">Recall</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Resume Screening — part of the Foundev portfolio.</span>
+    <span>Themed for artificial intelligence.</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

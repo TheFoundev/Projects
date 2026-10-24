@@ -1,0 +1,15 @@
+{
+  "name": "rocket-chat",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Team communication platform with channels, direct messages, threads, file sharing, webhooks, bots and video conferencing.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/"
+  },
+  "engines": {
+    "node": ">=22.5"
+  }
+}
