@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Similarity Radar · Document Plagiarism Checker</title>
+    <meta name="description" content="Web search-based text originality check: sentence-level quoted search with blocked-domain filtering.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="masthead">
+        <div class="mast-radar" aria-hidden="true">
+            <svg viewBox="0 0 200 200" class="mast-radar-svg">
+                <path class="sweep-wedge" d="M100,100 L100,2 A98,98 0 0,1 163,25 Z"></path>
+                <line class="sweep-line" x1="100" y1="100" x2="100" y2="2"></line>
+                <circle cx="100" cy="100" r="30"></circle>
+                <circle cx="100" cy="100" r="55"></circle>
+                <circle cx="100" cy="100" r="80"></circle>
+                <circle cx="100" cy="100" r="98"></circle>
+                <g class="blips">
+                    <circle cx="128" cy="58" r="3"></circle>
+                    <circle cx="62" cy="132" r="2.5"></circle>
+                    <circle cx="150" cy="120" r="2"></circle>
+                </g>
+            </svg>
+        </div>
+        <div class="mast-text">
+            <p class="kicker"><a href="{{ url_for('index') }}">Similarity Radar</a> <span aria-hidden="true">·</span> research desk</p>
+            <h1>Document Plagiarism Checker</h1>
+            <p class="mast-sub">Web search-based text originality check</p>
+            <p class="method-note"><strong>Method, honestly:</strong> every sentence is quoted and searched on the web (region <code>id-ID</code>, 10 results per query, small pause between queries). Hits on blocked domains — LinkedIn, YouTube, Instagram, Facebook, Twitter, Reddit and major marketplaces — are filtered out. The index is <em>matched sentences ÷ total sentences × 100</em>. A match means the sentence itself — or its opening phrase — was found in the title, snippet or URL of a returned result; it is not a semantic similarity score.</p>
+        </div>
+    </header>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-stack" role="status" aria-live="polite">
+        {% for message in messages %}
+        <p class="flash">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <main class="desk">
+        <section class="desk-input" aria-labelledby="input-heading">
+            <div class="panel-head">
+                <h2 id="input-heading">Input desk</h2>
+                <p class="panel-note">One input per scan: pasted text <em>or</em> a PDF.</p>
+            </div>
+
+            <div class="tabs" role="tablist" aria-label="Input mode">
+                <button type="button" class="tab is-active" id="tab-text" role="tab" aria-selected="true" aria-controls="panel-text">Paste text</button>
+                <button type="button" class="tab" id="tab-file" role="tab" aria-selected="false" aria-controls="panel-file">Upload PDF</button>
+            </div>
+
+            <div class="form-shell">
+                <form method="post" action="{{ url_for('index') }}" enctype="multipart/form-data" id="scan-form" novalidate>
+                    <div class="tab-panel" id="panel-text" role="tabpanel" aria-labelledby="tab-text">
+                        <label class="field-label" for="text-input">Text to scan</label>
+                        <textarea name="text" id="text-input" rows="12" placeholder="Paste the passage you want to check…&#10;Sentences are split on '. ' exactly like the backend does."></textarea>
+                        <div class="counters">
+                            <span class="counter" id="char-count">0 characters</span>
+                            <span class="counter" id="sent-count">0 sentences</span>
+                            <span class="counter counter-hint">split on ". "</span>
+                        </div>
+                    </div>
+
+                    <div class="tab-panel is-hidden" id="panel-file" role="tabpanel" aria-labelledby="tab-file">
+                        <span class="field-label" id="drop-label">PDF document</span>
+                        <label class="dropzone" id="dropzone" for="file-input">
+                            <svg class="dz-icon" viewBox="0 0 48 48" aria-hidden="true">
+                                <path d="M12 6h16l8 8v28H12z"></path>
+                                <path d="M28 6v8h8"></path>
+                                <path d="M18 30h12M18 36h8"></path>
+                            </svg>
+                            <span class="dz-title">Drop a PDF here, or click to browse</span>
+                            <span class="dz-sub">PDF only · maximum 16 MB (16,000,000 bytes)</span>
+                            <input type="file" name="file" id="file-input" accept=".pdf,application/pdf" class="dz-input">
+                        </label>
+                        <div class="dz-meta" id="dz-meta" hidden>
+                            <span class="dz-file" id="file-name"></span>
+                            <button type="button" class="link-btn" id="file-clear">Remove file</button>
+                        </div>
+                        <p class="panel-note tight">The PDF is stored in <code>uploads/</code> and its text is extracted page by page on the server.</p>
+                    </div>
+
+                    <p class="field-error" id="form-error" role="alert" hidden></p>
+
+                    <div class="submit-row">
+                        <button type="submit" class="btn-scan" id="scan-btn">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" class="btn-icon">
+                                <circle cx="10.5" cy="10.5" r="6.5"></circle>
+                                <path d="M15.5 15.5 21 21"></path>
+                            </svg>
+                            Scan originality
+                        </button>
+                        <button type="button" class="link-btn" id="clear-btn">Clear desk</button>
+                    </div>
+                </form>
+
+                <div class="progress-overlay" id="progress" hidden>
+                    <svg viewBox="0 0 100 100" class="progress-radar" aria-hidden="true">
+                        <circle cx="50" cy="50" r="40"></circle>
+                        <circle cx="50" cy="50" r="26"></circle>
+                        <line class="progress-sweep" x1="50" y1="50" x2="50" y2="10"></line>
+                    </svg>
+                    <p class="progress-title">Scanning…</p>
+                    <p class="progress-text">Each sentence is being quoted into Google (TLD <code>co.id</code>, 10 results, short pause per query). Long texts can take a minute or two — please keep this tab open.</p>
+                </div>
+            </div>
+
+            <p class="kbd-hint">Shortcut: <kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Enter</kbd> starts a scan.</p>
+        </section>
+
+        <section class="desk-results" id="hasil" aria-labelledby="hasil-heading">
+            <div class="panel-head">
+                <h2 id="hasil-heading">Results</h2>
+                <p class="panel-note">Radar reading of the server-computed index.</p>
+            </div>
+
+            {% if hasil_persen is defined %}
+            {% if hasil_persen <= 0 %}
+            {% set status_class = 'ok' %}
+            {% set status_word = 'Original' %}
+            {% elif hasil_persen < 30 %}
+            {% set status_class = 'warn' %}
+            {% set status_word = 'Minor overlap' %}
+            {% else %}
+            {% set status_class = 'bad' %}
+            {% set status_word = 'High overlap' %}
+            {% endif %}
+
+            <div class="result-stamp-row">
+                <div class="stamp stamp-{{ status_class }}" id="status-stamp">
+                    <span class="stamp-label">Radar reading</span>
+                    <span class="stamp-word" id="status-word" data-persen="{{ hasil_persen }}">{{ status_word }}</span>
+                    <span class="stamp-pct">{{ '%.1f'|format(hasil_persen) }}%</span>
+                </div>
+                <ul class="stats" id="result-stats">
+                    <li><span class="stat-num">{{ data|length }}</span><span class="stat-cap">sentences scanned</span></li>
+                    <li><span class="stat-num">{{ hasil_link|length }}</span><span class="stat-cap">matched sentences</span></li>
+                    <li><span class="stat-num">id-ID</span><span class="stat-cap">search region used</span></li>
+                </ul>
+            </div>
+
+            <div class="gauge" role="img" aria-label="Similarity index: {{ '%.1f'|format(hasil_persen) }} percent">
+                <svg viewBox="0 0 200 200" class="gauge-svg" aria-hidden="true">
+                    <g class="gauge-ticks">
+                        <line x1="100" y1="8" x2="100" y2="20"></line>
+                        <line x1="192" y1="100" x2="180" y2="100"></line>
+                        <line x1="100" y1="192" x2="100" y2="180"></line>
+                        <line x1="8" y1="100" x2="20" y2="100"></line>
+                    </g>
+                    <circle class="gauge-track" cx="100" cy="100" r="84"></circle>
+                    <circle class="gauge-arc" id="gauge-arc" cx="100" cy="100" r="84" pathLength="100" stroke-dasharray="100" stroke-dashoffset="{{ 100 - hasil_persen }}" transform="rotate(-90 100 100)"></circle>
+                    <line class="gauge-needle" id="gauge-needle" x1="100" y1="100" x2="100" y2="26" style="transform: rotate({{ hasil_persen * 3.6 }}deg)"></line>
+                    <circle class="gauge-hub" cx="100" cy="100" r="6"></circle>
+                </svg>
+                <div class="gauge-readout">
+                    <span class="gauge-value" id="gauge-value" data-persen="{{ hasil_persen }}">{{ '%.1f'|format(hasil_persen) }}</span><span class="gauge-unit">%</span>
+                </div>
+                <p class="gauge-caption">similarity index · matched ÷ total sentences</p>
+            </div>
+            <p class="threshold-note">UI reading, thresholds set on this page: <strong>0%</strong> Original · <strong>under 30%</strong> Minor overlap · <strong>30% or more</strong> High overlap.</p>
+
+            <div class="matches-block">
+                <div class="block-head">
+                    <h3>Matched sentences</h3>
+                    {% if hasil_link|length > 0 %}
+                    <button type="button" class="link-btn" id="matches-toggle" aria-expanded="true" aria-controls="matches">Collapse list</button>
+                    {% endif %}
+                </div>
+                {% if hasil_link|length > 0 %}
+                <ol class="matches" id="matches">
+                    {% for i in range(0, hasil_link|length) %}
+                    <li class="match">
+                        <div class="match-top">
+                            <span class="match-num">{{ '%02d'|format(i + 1) }}</span>
+                            <span class="match-tag">exact phrase hit</span>
+                            <button type="button" class="copy-btn" data-copy="sentence">Copy sentence</button>
+                        </div>
+                        <p class="match-sentence">{{ hasil_plagiarism[i] }}</p>
+                        <div class="match-source">
+                            <a class="source-link" href="{{ link_output[i] }}" target="_blank" rel="noopener noreferrer">{{ link_output[i] }}</a>
+                            <button type="button" class="copy-btn" data-copy="link">Copy link</button>
+                            <a class="open-link" href="{{ link_output[i] }}" target="_blank" rel="noopener noreferrer">Open<span class="sr-only"> source for matched sentence {{ i + 1 }}</span></a>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ol>
+                {% else %}
+                <p class="empty-note">No matched sentences: none of the quoted sentence queries returned a non-blocked source in the first 10 results.</p>
+                {% endif %}
+            </div>
+
+            <div class="sources-block">
+                <div class="block-head">
+                    <h3>Sources</h3>
+                    <span class="block-count">{{ hasil_link|length }} link{% if hasil_link|length != 1 %}s{% endif %}</span>
+                </div>
+                {% if hasil_link|length > 0 %}
+                <ul class="sources" id="sources-list">
+                    {% for link in hasil_link %}
+                    <li>
+                        <a href="{{ link }}" target="_blank" rel="noopener noreferrer">{{ link }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="empty-note">No sources passed the blocked-domain filter.</p>
+                {% endif %}
+            </div>
+
+            <div class="newscan-row">
+                <a class="btn-new" href="{{ url_for('index') }}">Start a new scan</a>
+                <p class="panel-note tight">Returns to a cleared desk. Your previous scan stays in its own URL (<code>/plagiarism/…</code>) until the server restarts.</p>
+            </div>
+            {% else %}
+
+            <div class="empty-state">
+                <svg viewBox="0 0 200 200" class="empty-radar" aria-hidden="true">
+                    <circle cx="100" cy="100" r="30"></circle>
+                    <circle cx="100" cy="100" r="55"></circle>
+                    <circle cx="100" cy="100" r="80"></circle>
+                    <line class="empty-sweep" x1="100" y1="100" x2="100" y2="20"></line>
+                    <circle class="empty-blip" cx="136" cy="66" r="4"></circle>
+                </svg>
+                <h3>No scan yet</h3>
+                <p>Paste a passage in the input desk — or switch to the PDF tab and drop a document — then press <strong>Scan originality</strong>. The radar fills with the server-computed similarity index and the matched sentences appear here, each linked to the source that was found.</p>
+                <p class="empty-tip">Tip: the checker works sentence by sentence, so text with clear sentence boundaries gives the cleanest reading.</p>
+            </div>
+            {% endif %}
+
+            <div class="explainer">
+                <h3>What was searched</h3>
+                <ol class="explainer-steps">
+                    <li><strong>Split.</strong> Your input (pasted text or extracted PDF text) is split into sentences on sentence-ending punctuation (<code>. ! ?</code>) after newlines are flattened to spaces.</li>
+                    <li><strong>Quote.</strong> Each sentence is reduced to a distinctive opening phrase and sent as an exact-phrase query (<code>"its words, inner quotes softened"</code>) with region <code>id-ID</code> and 10 results per query.</li>
+                    <li><strong>Verify.</strong> A sentence counts as matched only when its wording is found in the title, snippet or URL of a returned result — a result that merely shares a topic does not count.</li>
+                    <li><strong>Filter.</strong> Results pointing at blocked domains are dropped: <code>id.linkedin.com</code>, <code>linkedin.com</code>, <code>youtube.com</code>, <code>instagram.com</code>, <code>facebook.com</code>, <code>tokopedia.com</code>, <code>twitter.com</code>, <code>reddit.com</code>, <code>bukalapak.com</code>, <code>shopee.com</code>, <code>blibli.com</code>.</li>
+                    <li><strong>Score.</strong> <code>(matched sentences ÷ total sentences) × 100</code> is the index shown in the gauge.</li>
+                </ol>
+                <p class="explainer-caveat">Honest limits: this is a web-presence check, not a teacher's judgement. Paraphrased or translated text will not match, a single sentence can appear in the top 10 for many reasons, and every query leaves this server toward the search provider — rate limits can slow or break a long scan.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="colophon">
+        <p><strong>Similarity Radar</strong> — research desk for the Flask document-plagiarism-checker. Routes: <code>GET|POST /</code> for the desk, <code>GET|POST /plagiarism/&lt;name&gt;</code> for the reading (<code>word</code> for pasted text, otherwise the uploaded filename).</p>
+        <p class="colophon-dim">PDF uploads are capped at 16 MB by <code>MAX_CONTENT_LENGTH</code> and kept in <code>uploads/</code>. Nothing here fabricates a score — the number comes from the server.</p>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

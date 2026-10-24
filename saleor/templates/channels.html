@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Channels</h1><p class="muted">Pick a channel to read and post.</p>
+<div class="grid">
+{% for ch in channels %}
+  <a class="card" href="{{ url_for('channel', channel_id=ch.id) }}" style="color:inherit;text-decoration:none">
+    <h3># {{ ch.name }}</h3><p class="muted small">{{ ch.topic or '' }}</p>
+    <span class="badge">{{ 'private' if ch.private else 'public' }}</span>
+  </a>
+{% endfor %}
+</div>
+{% endblock %}

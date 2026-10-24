@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tidemark · Tidemark</title>
+<meta name="description" content="Tidemark compares forecasting baselines on a seasonal daily series: a moving average, a linear trend, a seasonal naive, a seasonal trend and SARIMAX all forecast the same holdout, and the mean absolute error and the RMSE of every one of them stand next to each other.">
+<meta name="theme-color" content="hsl(188 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=ui-sans-serif,+system-ui,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">TM</span>
+    <span><strong>Tidemark</strong><small>Forecasts compared on the same holdout</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="active">Overview</a><a href="console.html" class="">Console</a></nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">science &amp; research</span>
+      <h1>Five forecasters, one holdout, no winner by default.</h1>
+      <p class="lede">Tidemark compares forecasting baselines on a seasonal daily series: a moving average, a linear trend, a seasonal naive, a seasonal trend and SARIMAX all forecast the same holdout, and the mean absolute error and the RMSE of every one of them stand next to each other.</p>
+      <div class="actions">
+        <a class="btn primary" href="console.html">Open the console</a>
+        <a class="btn" href="#how">How it works</a>
+        
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <span class="eyebrow">What it does</span>
+          <h2 style="margin-top:10px">The capabilities</h2>
+        </div>
+        <p class="lede" style="max-width:42ch">Every panel below is served by the real API of this project — nothing here is a mock-up.</p>
+      </div>
+      <div class="grid cols-3"><article class="card reveal">
+          <div class="icon">∿</div>
+          <h3>The season is found, not assumed</h3>
+          <p>The period of the series is worked out from the shape of the series itself.</p>
+        </article><article class="card reveal">
+          <div class="icon">◫</div>
+          <h3>Five forecasters, one holdout</h3>
+          <p>Every baseline predicts the same days, so the comparison means something.</p>
+        </article><article class="card reveal">
+          <div class="icon">▦</div>
+          <h3>The error of every model</h3>
+          <p>The console shows the mean absolute error and the RMSE of each forecast side by side.</p>
+        </article><article class="card reveal">
+          <div class="icon">◷</div>
+          <h3>The days of the holdout</h3>
+          <p>The forecast of the best model stands next to the value that was really measured.</p>
+        </article><article class="card reveal">
+          <div class="icon">⟳</div>
+          <h3>More than one split</h3>
+          <p>The same baselines can be measured over several windows of the history.</p>
+        </article><article class="card reveal">
+          <div class="icon">⚖</div>
+          <h3>A scaled error as well</h3>
+          <p>The mean absolute scaled error puts the error of every series on one scale.</p>
+        </article></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Architecture</span>
+          <h2 style="margin:10px 0 12px">How it works</h2>
+          <p class="lede">The series is simulated with a trend, a weekly pattern, a monthly pattern and noise, and it is split into a training part and a holdout of the last fifth. The season of the series is not assumed but worked out from its own shape, so the week of a daily series is found and not hard coded. Every baseline forecasts the holdout and the errors are measured with the mean absolute error and the root mean squared error, and the same baselines can be measured again over several rolling windows instead of one single split.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:18px"><span class="badge">Python</span><span class="badge">NumPy</span><span class="badge">Pandas</span><span class="badge">statsmodels SARIMAX</span><span class="badge">Matplotlib</span><span class="badge">Standard library server</span></div>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">The API</span>
+          <h2 style="margin:10px 0 12px">Endpoints</h2>
+          <div class="panel">
+            <table>
+              <thead><tr><th>Method</th><th>Path</th><th>What it does</th></tr></thead>
+              <tbody><tr><td><code>GET</code></td><td><code>/api/summary</code></td><td>The error of every baseline and the forecast of the best one</td></tr><tr><td><code>GET</code></td><td><code>/api/forecasts</code></td><td>The forecasts and the errors of every baseline of the holdout</td></tr><tr><td><code>POST</code></td><td><code>/api/rolling</code></td><td>Measure the baselines over several windows of the history</td></tr><tr><td><code>POST</code></td><td><code>/api/train</code></td><td>Run the comparison again and answer with the new numbers</td></tr><tr><td><code>GET</code></td><td><code>/console.html</code></td><td>The console of this site</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Quick start</span>
+          <h2 style="margin:10px 0 12px">Run it locally</h2>
+<pre><code># pip install -r requirements.txt
+# python main.py train            # the comparison of the baselines
+# python main.py demo             # the forecast plot of the best baseline
+# pytest -q                       # 9 tests
+# python3 web/server.py --port 8301   # this site</code></pre>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">Live</span>
+          <h2 style="margin:10px 0 12px">The state of the running instance</h2>
+          <div class="stats" id="stats">
+            <div class="stat"><div class="value" data-stat="__status">—</div><div class="label">Status</div></div>
+            <div class="stat"><div class="value" data-stat="best_mae">—</div><div class="label">Best MAE</div></div><div class="stat"><div class="value" data-stat="best_rmse">—</div><div class="label">Best RMSE</div></div><div class="stat"><div class="value" data-stat="models">—</div><div class="label">Baselines</div></div><div class="stat"><div class="value" data-stat="holdout">—</div><div class="label">Holdout days</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Tidemark — part of the Foundev portfolio.</span>
+    <span>Themed for science &amp; research.</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

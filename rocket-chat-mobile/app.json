@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "Rocket.Chat Mobile",
+    "slug": "rocket-chat-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.foundev.rocketchatmobile"
+    },
+    "android": {
+      "package": "com.foundev.rocketchatmobile",
+      "adaptiveIcon": {
+        "backgroundColor": "#f5455c"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}

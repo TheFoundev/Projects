@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Flick</title>
+  <style>
+    body { margin: 0; background: #0f1720; color: #e8eef6; font-family: system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 1rem; }
+    canvas { background: #16202b; border: 1px solid #26364a; border-radius: 6px; max-width: 100%; touch-action: none; }
+    p { margin: 0; }
+  </style>
+</head>
+<body>
+  <h1>Flick</h1>
+  <p>Drag from the ball to aim, release to flick. Clear every block.</p>
+  <canvas id="game" width="640" height="480"></canvas>
+  <p>Blocks left: <span id="left">0</span> &middot; Flicks: <span id="flicks">0</span></p>
+  <script src="/logic.js"></script>
+  <script src="/game.js"></script>
+</body>
+</html>

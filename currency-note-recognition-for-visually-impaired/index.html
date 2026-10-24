@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Note Sense — voice-first currency identifier</title>
+<meta name="description" content="Note Sense: a high-contrast, voice-first web UI for the currency-note-recognition-for-visually-impaired project. Photo selection, honest backend status, pre-recorded voice samples and the detector's reference gallery.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=2">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="masthead">
+  <p class="eyebrow">Indian currency note recognition · built for visually impaired users</p>
+  <h1>Note Sense</h1>
+  <p class="tagline">A voice-first identifier. Pick a note photo, follow three big steps, and play the project&#39;s own pre-recorded rupee announcements. Everything is oversized, high contrast and keyboard friendly.</p>
+
+  <div class="header-actions">
+    <button type="button" id="voice-toggle" class="btn btn-quiet" aria-pressed="true">Voice guidance: ON</button>
+    <button type="button" id="stop-speech" class="btn btn-quiet">Stop reading</button>
+  </div>
+
+  <p class="chip-row">
+    <span class="chip chip-alert">Recognition needs the local backend</span>
+    <span class="chip" data-backend-chip="1">Checking the backend…</span>
+  </p>
+</header>
+
+<main id="main">
+
+  <noscript>
+    <p class="noscript-note">This page needs JavaScript for the photo preview, the audio player and the reference gallery. The written instructions, the run command and the “About the method” section still work without it.</p>
+  </noscript>
+
+  <!-- ============ STEP 1 ============ -->
+  <section class="step" aria-labelledby="step1-h">
+    <h2 id="step1-h"><span class="step-num">Step 1</span> Choose a note photo</h2>
+
+    <div class="drop-zone" id="drop-zone">
+      <svg class="drop-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <rect x="4" y="14" width="56" height="36" rx="4" fill="none" stroke="currentColor" stroke-width="4"/>
+        <circle cx="32" cy="32" r="10" fill="none" stroke="currentColor" stroke-width="4"/>
+        <circle cx="32" cy="32" r="4" fill="currentColor"/>
+        <path d="M20 14l4-6h16l4 6" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+      </svg>
+      <p class="drop-text">Drag a note photo here, or use the big button below.</p>
+      <label class="btn btn-primary btn-file" for="note-photo">Choose a note photo
+        <input class="file-input" type="file" id="note-photo" accept="image/jpeg,image/png,image/webp,image/*">
+      </label>
+      <p class="drop-hint">JPG or PNG. One side of the note, well lit.</p>
+    </div>
+
+    <p class="field-error" id="file-error" role="alert" hidden></p>
+
+    <figure class="preview" id="preview-wrap" hidden>
+      <img id="preview-img" alt="Preview of the chosen currency note photo">
+      <figcaption>
+        <span id="preview-name">—</span>
+        <button type="button" class="btn btn-danger btn-sm" id="clear-photo">Remove photo</button>
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ STEP 2 ============ -->
+  <section class="step" aria-labelledby="step2-h">
+    <h2 id="step2-h"><span class="step-num">Step 2</span> Identify note</h2>
+    <button type="button" class="btn btn-primary btn-giant" id="identify-btn" disabled>Identify note</button>
+    <p class="hint" id="identify-hint">Choose a photo first — the button turns on when a preview is showing.</p>
+  </section>
+
+  <!-- ============ STEP 3 ============ -->
+  <section class="step" aria-labelledby="step3-h">
+    <h2 id="step3-h"><span class="step-num">Step 3</span> Result</h2>
+
+    <div class="banner" id="result-banner" data-state="empty" role="status" aria-live="polite">
+      <p class="banner-kicker" id="banner-kicker">Waiting for Step 2</p>
+      <p class="banner-title" id="banner-title">No result yet</p>
+      <p class="banner-body" id="banner-body">Choose a note photo in Step 1, then press &#8220;Identify note&#8221;.</p>
+    </div>
+
+    <div class="banner-actions">
+      <button type="button" class="btn btn-quiet" id="read-result">Read this aloud</button>
+    </div>
+
+    <div class="panel">
+      <h3>How to run the recogniser</h3>
+      <p>This page needs the <strong>local backend</strong> (<code>server.py</code>) — it serves this page and runs the OpenCV detector on the photo you upload. Start it from the project folder:</p>
+      <div class="cmd">
+        <code id="run-cmd">python server.py</code>
+        <button type="button" class="btn btn-quiet btn-sm" id="copy-cmd">Copy command</button>
+      </div>
+      <p class="fine">Then open <a href="http://127.0.0.1:8000/">http://127.0.0.1:8000/</a> and use <strong>Choose a note photo</strong> → <strong>Identify note</strong>. If the backend is not running, the banner says so instead of inventing a result.</p>
+      <p class="fine">The detector is the project&#39;s own: ORB keypoints, brute-force matching, Lowe&#8217;s ratio test at <strong>0.789</strong>, against the reference photographs in <code>Currency Detection using OpenCV in ML/files/</code>. The original desktop script still works on its own — it reads a <strong>hardcoded</strong> test image (<code>files/test_200_1.jpg</code>), so edit that line to point at your photo, then run:</p>
+      <div class="cmd">
+        <code>cd "Currency Detection using OpenCV in ML" &amp;&amp; python detect.py</code>
+      </div>
+      <p class="fine">Its audio playback lines (<code>playsound</code>, <code>gTTS</code>) are commented out, which is why the voice samples below are played by this page instead.</p>
+    </div>
+  </section>
+
+  <!-- ============ VOICE SAMPLES ============ -->
+  <section class="step" aria-labelledby="voice-h">
+    <h2 id="voice-h"><span class="step-num">Voice</span> How voice feedback will work</h2>
+    <p class="lede">The repo ships pre-recorded announcements for three denominations in <code>Currency Detection using OpenCV in ML/audio/</code>. Press a button to hear the real file — this is working audio, not a mock-up.</p>
+
+    <div class="audio-row">
+      <button type="button" class="btn btn-primary" id="play-20" data-denom="20">Play &#8377;20 sample</button>
+      <button type="button" class="btn btn-primary" id="play-50" data-denom="50">Play &#8377;50 sample</button>
+      <button type="button" class="btn btn-primary" id="play-100" data-denom="100">Play &#8377;100 sample</button>
+      <button type="button" class="btn btn-quiet" id="stop-audio">Stop</button>
+    </div>
+
+    <p class="now-playing" id="now-playing" role="status" aria-live="polite">Nothing playing.</p>
+    <p class="field-error" id="audio-error" role="alert" hidden></p>
+
+    <audio id="sample-audio" preload="none"></audio>
+
+    <p class="fine">Only &#8377;20, &#8377;50 and &#8377;100 clips exist in the repository — there is <strong>no &#8377;200 or &#8377;500 clip</strong>, so those buttons do not exist here either. When the detector later reports another denomination, this section will say so honestly instead of pretending a file is playing.</p>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section class="step" aria-labelledby="gallery-h">
+    <h2 id="gallery-h"><span class="step-num">Gallery</span> Reference set used by the detector</h2>
+    <p class="lede">Every image below lives in <code>Currency Detection using OpenCV in ML/files/</code>. The six bold-labelled images are the training references listed in <code>detect.py</code>; <code>test_200_1.jpg</code> is the hardcoded test image. Tap a thumbnail for a full-screen view.</p>
+    <div class="gallery" id="gallery-grid">
+      <p class="empty-state" id="gallery-empty">Loading reference images&#8230;</p>
+    </div>
+  </section>
+
+  <!-- ============ METHOD ============ -->
+  <section class="step" aria-labelledby="method-h">
+    <h2 id="method-h"><span class="step-num">Method</span> About the method</h2>
+    <details class="method">
+      <summary>ORB keypoints + BFMatcher + Lowe&#8217;s ratio 0.789 — why it suits offline use</summary>
+      <div class="method-body">
+        <ol class="method-list">
+          <li><strong>ORB</strong> — <code>cv2.ORB_create()</code> (the script comments that it &#8220;is an alternative to SIFT&#8221;) detects oriented FAST keypoints and rotated BRIEF descriptors on the test photo and on each reference photo via <code>orb.detectAndCompute(img, None)</code>.</li>
+          <li><strong>Brute-force matching</strong> — <code>cv2.BFMatcher().knnMatch(des1, des2, k=2)</code> returns the best and second-best descriptor match for every test keypoint.</li>
+          <li><strong>Lowe&#8217;s ratio test</strong> — a match is kept when <code>m.distance &lt; 0.789 * n.distance</code>. The source calls 0.789 &#8220;an arbitrary number&#8221;; it filters out ambiguous matches so only distinctive texture survives.</li>
+          <li><strong>Winner takes all</strong> — the reference with the most good matches (must beat the starting threshold of 8) wins. The denomination is sliced straight from the winning path: <code>str(training_set[max_pt])[6:-4]</code>, so <code>files/200.jpg</code> becomes <code>200</code>, then <code>Detected denomination: Rs. 200</code> is printed and <code>cv2.drawMatchesKnn</code> plus matplotlib draw the match map.</li>
+          <li><strong>Training set</strong> — the desktop script <code>detect.py</code> uses exactly <code>files/20.jpg, files/50.jpg, files/100.jpg, files/500.jpg, files/200.jpg, files/test_20_6.jpg</code>. The browser backend (<code>server.py</code> → <code>detector.py</code>) uses every reference photograph in <code>files/</code> instead and groups the matches per denomination, so a photo uploaded from this page is compared with all of them.</li>
+        </ol>
+        <p><strong>Why it suits offline, assistive use:</strong> ORB is a patent-free, CPU-only algorithm — no GPU, no network and no model weights to download. Matching against a handful of local JPEGs needs no training run, and the whole dependency list in <code>requirements.txt</code> is opencv-python, numpy, matplotlib and small helpers. On a phone or a low-end laptop the pipeline finishes in seconds, which is exactly what a voice-first tool for visually impaired users needs.</p>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>Interface for the <strong>currency-note-recognition-for-visually-impaired</strong> repository. Recognition runs locally: <code>server.py</code> serves this page and runs the project&#39;s OpenCV detector on the photo you upload. No API keys, no invented results — a denomination is only shown when the keypoint matching actually supports it.</p>
+</footer>
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lb-caption" hidden>
+  <div class="lightbox-inner">
+    <img id="lb-img" alt="">
+    <p class="lightbox-caption" id="lb-caption">—</p>
+    <p class="lightbox-role" id="lb-role">—</p>
+    <div class="lightbox-actions">
+      <button type="button" class="btn btn-quiet" id="lb-prev">Previous</button>
+      <button type="button" class="btn btn-quiet" id="lb-read">Read caption aloud</button>
+      <button type="button" class="btn btn-quiet" id="lb-next">Next</button>
+      <button type="button" class="btn btn-primary" id="lb-close">Close (Esc)</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js?v=2"></script>
+</body>
+</html>

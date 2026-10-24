@@ -1,0 +1,14 @@
+﻿{
+    "id":  "plant-leaf-disease-detection-cnn",
+    "name":  "Plant Leaf Disease Detection (CNN)",
+    "domain":  "Artificial Intelligence \u0026 Machine Learning",
+    "repository":  "https://github.com/Ghanshyam89/Plant-Leaf-Disease-Detection-using-Deep-Learning",
+    "stack":  "Python; TensorFlow; TFLite",
+    "goal":  "Transfer learning on PlantVillage, Grad-CAM heatmaps and mobile export.",
+    "license":  "MIT",
+    "licenseWarning":  null,
+    "entry":  "home/apps.py",
+    "expectedFileCount":  16,
+    "downloadStatus":  "success",
+    "downloadedFileCount":  37
+}

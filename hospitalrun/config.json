@@ -1,0 +1,312 @@
+{
+ "name": "HospitalRun",
+ "tagline": "Patient records that work offline",
+ "description": "Offline-first hospital management frontend covering patient records, appointments, prescriptions, labs, imaging and incidents.",
+ "special": "clinical",
+ "features": [
+  "Patient registry with allergies and blood type",
+  "Appointment scheduling by department and provider",
+  "Prescriptions with dosage and status",
+  "Lab orders with priority and results",
+  "Incident log for clinical safety events"
+ ],
+ "publicRead": true,
+ "port": 3000,
+ "resources": [
+  {
+   "name": "patients",
+   "label": "Patients",
+   "icon": "\u25cd",
+   "fields": [
+    {
+     "name": "name",
+     "required": true,
+     "type": "text",
+     "label": "Name"
+    },
+    {
+     "name": "dob",
+     "label": "Date of birth",
+     "type": "text"
+    },
+    {
+     "name": "sex",
+     "type": "text",
+     "label": "Sex"
+    },
+    {
+     "name": "phone",
+     "type": "text",
+     "label": "Phone"
+    },
+    {
+     "name": "blood_type",
+     "label": "Blood type",
+     "type": "text"
+    },
+    {
+     "name": "allergies",
+     "multiline": true,
+     "type": "text",
+     "label": "Allergies"
+    },
+    {
+     "name": "status",
+     "default": "active",
+     "type": "text",
+     "label": "Status"
+    }
+   ]
+  },
+  {
+   "name": "appointments",
+   "label": "Appointments",
+   "icon": "\u25f7",
+   "fields": [
+    {
+     "name": "patient_id",
+     "type": "int",
+     "required": true,
+     "label": "Patient ID"
+    },
+    {
+     "name": "provider",
+     "required": true,
+     "type": "text",
+     "label": "Provider"
+    },
+    {
+     "name": "department",
+     "default": "General",
+     "type": "text",
+     "label": "Department"
+    },
+    {
+     "name": "scheduled_at",
+     "required": true,
+     "label": "Scheduled at",
+     "type": "text"
+    },
+    {
+     "name": "reason",
+     "multiline": true,
+     "type": "text",
+     "label": "Reason"
+    },
+    {
+     "name": "status",
+     "default": "scheduled",
+     "type": "text",
+     "label": "Status"
+    }
+   ]
+  },
+  {
+   "name": "prescriptions",
+   "label": "Prescriptions",
+   "icon": "\u211e",
+   "fields": [
+    {
+     "name": "patient_id",
+     "type": "int",
+     "required": true,
+     "label": "Patient ID"
+    },
+    {
+     "name": "medication",
+     "required": true,
+     "type": "text",
+     "label": "Medication"
+    },
+    {
+     "name": "dose",
+     "default": "1 tablet",
+     "type": "text",
+     "label": "Dose"
+    },
+    {
+     "name": "frequency",
+     "default": "daily",
+     "type": "text",
+     "label": "Frequency"
+    },
+    {
+     "name": "prescribed_by",
+     "type": "text",
+     "label": "Prescribed By"
+    },
+    {
+     "name": "status",
+     "default": "active",
+     "type": "text",
+     "label": "Status"
+    }
+   ]
+  },
+  {
+   "name": "lab_orders",
+   "label": "Lab orders",
+   "icon": "\u2697",
+   "fields": [
+    {
+     "name": "patient_id",
+     "type": "int",
+     "required": true,
+     "label": "Patient ID"
+    },
+    {
+     "name": "test",
+     "required": true,
+     "type": "text",
+     "label": "Test"
+    },
+    {
+     "name": "priority",
+     "default": "routine",
+     "type": "text",
+     "label": "Priority"
+    },
+    {
+     "name": "status",
+     "default": "ordered",
+     "type": "text",
+     "label": "Status"
+    },
+    {
+     "name": "result",
+     "multiline": true,
+     "type": "text",
+     "label": "Result"
+    }
+   ]
+  },
+  {
+   "name": "incidents",
+   "label": "Incidents",
+   "icon": "\u26a0",
+   "fields": [
+    {
+     "name": "title",
+     "required": true,
+     "type": "text",
+     "label": "Title"
+    },
+    {
+     "name": "severity",
+     "default": "low",
+     "type": "text",
+     "label": "Severity"
+    },
+    {
+     "name": "reported_by",
+     "type": "text",
+     "label": "Reported By"
+    },
+    {
+     "name": "description",
+     "multiline": true,
+     "type": "text",
+     "label": "Description"
+    },
+    {
+     "name": "status",
+     "default": "open",
+     "type": "text",
+     "label": "Status"
+    }
+   ]
+  }
+ ],
+ "seed": {
+  "patients": [
+   {
+    "name": "Amara Okafor",
+    "dob": "1988-04-19",
+    "sex": "F",
+    "phone": "555-0142",
+    "blood_type": "O+",
+    "allergies": "Penicillin",
+    "status": "active"
+   },
+   {
+    "name": "Luis Hernandez",
+    "dob": "1972-11-02",
+    "sex": "M",
+    "phone": "555-0198",
+    "blood_type": "A-",
+    "allergies": "None recorded",
+    "status": "active"
+   },
+   {
+    "name": "Mei Lin",
+    "dob": "1995-07-23",
+    "sex": "F",
+    "phone": "555-0110",
+    "blood_type": "B+",
+    "allergies": "Latex",
+    "status": "active"
+   }
+  ],
+  "appointments": [
+   {
+    "patient_id": 1,
+    "provider": "Dr. Ellis",
+    "department": "Cardiology",
+    "scheduled_at": "2026-05-04 09:30",
+    "reason": "Follow-up on blood pressure",
+    "status": "scheduled"
+   },
+   {
+    "patient_id": 2,
+    "provider": "Dr. Raman",
+    "department": "General",
+    "scheduled_at": "2026-05-04 11:00",
+    "reason": "Annual physical",
+    "status": "checked-in"
+   }
+  ],
+  "prescriptions": [
+   {
+    "patient_id": 1,
+    "medication": "Lisinopril",
+    "dose": "10 mg",
+    "frequency": "daily",
+    "prescribed_by": "Dr. Ellis",
+    "status": "active"
+   },
+   {
+    "patient_id": 3,
+    "medication": "Ibuprofen",
+    "dose": "200 mg",
+    "frequency": "as needed",
+    "prescribed_by": "Dr. Raman",
+    "status": "completed"
+   }
+  ],
+  "lab_orders": [
+   {
+    "patient_id": 2,
+    "test": "Complete blood count",
+    "priority": "routine",
+    "status": "resulted",
+    "result": "Within reference range"
+   },
+   {
+    "patient_id": 1,
+    "test": "Basic metabolic panel",
+    "priority": "urgent",
+    "status": "ordered",
+    "result": ""
+   }
+  ],
+  "incidents": [
+   {
+    "title": "Wrong wristband printed",
+    "severity": "medium",
+    "reported_by": "Nurse Adeyemi",
+    "description": "A duplicate wristband was printed for the same patient and corrected before use.",
+    "status": "review"
+   }
+  ]
+ }
+}

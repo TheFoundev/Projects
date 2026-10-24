@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transcribe · Transcribe</title>
+<meta name="description" content="Transcribe splits a recording into the parts where something is said, works out what every part is from its spectrum and hands back the sentence: the reference of the sample, the words that were heard and the error rate of the service.">
+<meta name="theme-color" content="hsl(247 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=ui-sans-serif,+system-ui,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">Tr</span>
+    <span><strong>Transcribe</strong><small>Speech in, words out</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="active">Overview</a><a href="console.html" class="">Console</a></nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">artificial intelligence</span>
+      <h1>The words of a recording, one after the other.</h1>
+      <p class="lede">Transcribe splits a recording into the parts where something is said, works out what every part is from its spectrum and hands back the sentence: the reference of the sample, the words that were heard and the error rate of the service.</p>
+      <div class="actions">
+        <a class="btn primary" href="console.html">Open the console</a>
+        <a class="btn" href="#how">How it works</a>
+        
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <span class="eyebrow">What it does</span>
+          <h2 style="margin-top:10px">The capabilities</h2>
+        </div>
+        <p class="lede" style="max-width:42ch">Every panel below is served by the real API of this project — nothing here is a mock-up.</p>
+      </div>
+      <div class="grid cols-3"><article class="card reveal">
+          <div class="icon">◆</div>
+          <h3>The silence is cut away</h3>
+          <p>The recording is split into the parts where something is actually said.</p>
+        </article><article class="card reveal">
+          <div class="icon">◑</div>
+          <h3>The spectrum is the feature</h3>
+          <p>Every part becomes a log band vector, so a word is read out of its sound.</p>
+        </article><article class="card reveal">
+          <div class="icon">✓</div>
+          <h3>An error rate you can read</h3>
+          <p>The word error rate of the test phrases is the number of the run.</p>
+        </article><article class="card reveal">
+          <div class="icon">▤</div>
+          <h3>The whole sentence</h3>
+          <p>The parts are put back together into the words of the phrase, in order.</p>
+        </article><article class="card reveal">
+          <div class="icon">⛨</div>
+          <h3>A vocabulary of ten</h3>
+          <p>The ten spoken digits are the words the service knows.</p>
+        </article><article class="card reveal">
+          <div class="icon">↻</div>
+          <h3>A new training on demand</h3>
+          <p>The console trains the classifier again and shows the metrics of the new run.</p>
+        </article></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Architecture</span>
+          <h2 style="margin:10px 0 12px">How it works</h2>
+          <p class="lede">The service works on synthesized speech: every word of the vocabulary is a pair of tones with an envelope, and a phrase is the tones of its words with a pause in between. The waveform is cut into the parts where the energy is above the threshold, the spectrum of every part is turned into a log band vector, and a random forest reads the word out of that vector. The word error rate of the run is measured on the test phrases, where a word that is missing or wrong costs one error.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:18px"><span class="badge">Python</span><span class="badge">Flask</span><span class="badge">NumPy</span><span class="badge">scikit-learn</span><span class="badge">Random forest</span><span class="badge">FFT features</span></div>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">The API</span>
+          <h2 style="margin:10px 0 12px">Endpoints</h2>
+          <div class="panel">
+            <table>
+              <thead><tr><th>Method</th><th>Path</th><th>What it does</th></tr></thead>
+              <tbody><tr><td><code>GET</code></td><td><code>/api/summary</code></td><td>The error rate of the service and the transcription of every test phrase</td></tr><tr><td><code>GET</code></td><td><code>/api/transcribe</code></td><td>Transcribe one of the test phrases and answer with the reference and the words</td></tr><tr><td><code>GET</code></td><td><code>/transcribe</code></td><td>The transcription of the first phrase, as JSON</td></tr><tr><td><code>GET</code></td><td><code>/demo</code></td><td>The page of the project, unchanged</td></tr><tr><td><code>GET</code></td><td><code>/console.html</code></td><td>The console of this site</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Quick start</span>
+          <h2 style="margin:10px 0 12px">Run it locally</h2>
+<pre><code># pip install -r requirements.txt
+# python main.py train            # the word error rate
+# python main.py demo             # the reference and the transcription
+# python app.py                   # the service and this site on port 5000
+# PORT=9007 python app.py         # the service and this site on port 9007
+# pytest -q                       # 5 tests</code></pre>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">Live</span>
+          <h2 style="margin:10px 0 12px">The state of the running instance</h2>
+          <div class="stats" id="stats">
+            <div class="stat"><div class="value" data-stat="__status">—</div><div class="label">Status</div></div>
+            <div class="stat"><div class="value" data-stat="word_error_rate">—</div><div class="label">Word error rate</div></div><div class="stat"><div class="value" data-stat="vocabulary_size">—</div><div class="label">Vocabulary</div></div><div class="stat"><div class="value" data-stat="test_phrases">—</div><div class="label">Test phrases</div></div><div class="stat"><div class="value" data-stat="sample_rate">—</div><div class="label">Sample rate</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Transcribe — part of the Foundev portfolio.</span>
+    <span>Themed for artificial intelligence.</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

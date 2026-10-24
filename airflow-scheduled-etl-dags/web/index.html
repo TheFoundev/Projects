@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orders ETL · Orders ETL</title>
+<meta name="description" content="A four-task orders pipeline: extract, validate, aggregate and load. The order of the tasks comes from the dependency graph and not from the order they are written in, a task that fails is retried, and every run is written into the history of the warehouse.">
+<meta name="theme-color" content="hsl(195 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=ui-sans-serif,+system-ui,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">ET</span>
+    <span><strong>Orders ETL</strong><small>A daily pipeline, ordered by its graph</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="active">Overview</a><a href="console.html" class="">Console</a></nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">data &amp; streaming</span>
+      <h1>The tasks run in the order the graph asks for.</h1>
+      <p class="lede">A four-task orders pipeline: extract, validate, aggregate and load. The order of the tasks comes from the dependency graph and not from the order they are written in, a task that fails is retried, and every run is written into the history of the warehouse.</p>
+      <div class="actions">
+        <a class="btn primary" href="console.html">Open the console</a>
+        <a class="btn" href="#how">How it works</a>
+        
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <span class="eyebrow">What it does</span>
+          <h2 style="margin-top:10px">The capabilities</h2>
+        </div>
+        <p class="lede" style="max-width:42ch">Every panel below is served by the real API of this project — nothing here is a mock-up.</p>
+      </div>
+      <div class="grid cols-3"><article class="card reveal">
+          <div class="icon">⇄</div>
+          <h3>The order comes from the graph</h3>
+          <p>A task only runs after the tasks it needs, even when the file is written in another order.</p>
+        </article><article class="card reveal">
+          <div class="icon">⟳</div>
+          <h3>A failed task is tried again</h3>
+          <p>A task that raises is retried twice, and the tasks that already ran are marked as rolled back.</p>
+        </article><article class="card reveal">
+          <div class="icon">▤</div>
+          <h3>A warehouse of the results</h3>
+          <p>The clean orders and the revenue of every day are written into SQLite.</p>
+        </article><article class="card reveal">
+          <div class="icon">⏱</div>
+          <h3>Every run is in the history</h3>
+          <p>The task, its state, its rows, its duration and the moment it finished are all kept.</p>
+        </article><article class="card reveal">
+          <div class="icon">◇</div>
+          <h3>The same Airflow DAG</h3>
+          <p>dags/orders_dag.py is a real Airflow DAG that calls the very same functions as the local runner.</p>
+        </article><article class="card reveal">
+          <div class="icon">⛁</div>
+          <h3>No scheduler needed</h3>
+          <p>The pipeline runs on one machine with a local runner and a file, so it is easy to read end to end.</p>
+        </article></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Architecture</span>
+          <h2 style="margin:10px 0 12px">How it works</h2>
+          <p class="lede">The DAG in dags/orders_dag.py declares the four tasks and their dependencies; the local runner in src/pipeline.py reads the same graph and calls the same functions, so the pipeline runs without Airflow installed. The raw orders are written to disk, the clean orders and the daily revenue become tables in SQLite, and every task lands in the task_runs history with its state, its rows and the seconds it took.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:18px"><span class="badge">Python</span><span class="badge">pandas</span><span class="badge">SQLite</span><span class="badge">Airflow-style DAG</span><span class="badge">Local runner</span></div>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">The API</span>
+          <h2 style="margin:10px 0 12px">Endpoints</h2>
+          <div class="panel">
+            <table>
+              <thead><tr><th>Method</th><th>Path</th><th>What it does</th></tr></thead>
+              <tbody><tr><td><code>GET</code></td><td><code>/api/summary</code></td><td>The state of the last run: the tasks, the rows and the days of the warehouse</td></tr><tr><td><code>GET</code></td><td><code>/api/tasks</code></td><td>The tasks of the DAG with the task each of them needs</td></tr><tr><td><code>GET</code></td><td><code>/api/history</code></td><td>The history of the runs: the task, the state, the rows and the duration</td></tr><tr><td><code>POST</code></td><td><code>/api/run</code></td><td>Run the pipeline again and answer with the summary of the new run</td></tr><tr><td><code>GET</code></td><td><code>/console.html</code></td><td>The console of this site</td></tr><tr><td><code>GET</code></td><td><code>/assets/theme.css</code></td><td>The design system of this site</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid cols-2">
+        <div class="reveal">
+          <span class="eyebrow">Quick start</span>
+          <h2 style="margin:10px 0 12px">Run it locally</h2>
+<pre><code># pip install -r requirements.txt
+# python main.py run          # run the four tasks of the DAG
+# python main.py demo         # the same run, printed
+# pytest -q                  # the test suite</code></pre>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">Live</span>
+          <h2 style="margin:10px 0 12px">The state of the running instance</h2>
+          <div class="stats" id="stats">
+            <div class="stat"><div class="value" data-stat="__status">—</div><div class="label">Status</div></div>
+            <div class="stat"><div class="value" data-stat="tasks">—</div><div class="label">Tasks</div></div><div class="stat"><div class="value" data-stat="raw_rows">—</div><div class="label">Raw rows</div></div><div class="stat"><div class="value" data-stat="clean_rows">—</div><div class="label">Clean rows</div></div><div class="stat"><div class="value" data-stat="daily_rows">—</div><div class="label">Days</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Orders ETL — part of the Foundev portfolio.</span>
+    <span>Themed for data &amp; streaming.</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

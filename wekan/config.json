@@ -1,0 +1,250 @@
+{
+  "name": "Wekan",
+  "tagline": "A fast kanban board for real work",
+  "description": "Open-source kanban board with boards, lists, cards, checklists, labels, due dates, file attachments and real-time collaborative updates.",
+  "special": "kanban",
+  "features": [
+    "Boards, lists and cards with ordering",
+    "Move cards between lists without a page reload",
+    "Assignees, due dates and free-form notes",
+    "Board visibility and ownership metadata",
+    "Seeded product board so the UI is useful immediately"
+  ],
+  "publicRead": true,
+  "port": 3000,
+  "resources": [
+    {
+      "name": "boards",
+      "label": "Boards",
+      "icon": "\u25a5",
+      "fields": [
+        {
+          "name": "name",
+          "required": true,
+          "type": "text",
+          "label": "Name"
+        },
+        {
+          "name": "description",
+          "multiline": true,
+          "type": "text",
+          "label": "Description"
+        },
+        {
+          "name": "visibility",
+          "default": "private",
+          "type": "text",
+          "label": "Visibility"
+        },
+        {
+          "name": "owner",
+          "default": "team",
+          "type": "text",
+          "label": "Owner"
+        }
+      ]
+    },
+    {
+      "name": "lists",
+      "label": "Lists",
+      "icon": "\u2630",
+      "fields": [
+        {
+          "name": "board_id",
+          "type": "int",
+          "required": true,
+          "label": "Board ID"
+        },
+        {
+          "name": "name",
+          "required": true,
+          "type": "text",
+          "label": "Name"
+        },
+        {
+          "name": "position",
+          "type": "int",
+          "default": 0,
+          "label": "Position"
+        },
+        {
+          "name": "wip_limit",
+          "type": "int",
+          "default": 0,
+          "label": "Wip Limit"
+        }
+      ]
+    },
+    {
+      "name": "cards",
+      "label": "Cards",
+      "icon": "\u25a4",
+      "fields": [
+        {
+          "name": "board_id",
+          "type": "int",
+          "required": true,
+          "label": "Board ID"
+        },
+        {
+          "name": "list_id",
+          "type": "int",
+          "required": true,
+          "label": "List ID"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "type": "text",
+          "label": "Title"
+        },
+        {
+          "name": "notes",
+          "multiline": true,
+          "type": "text",
+          "label": "Notes"
+        },
+        {
+          "name": "assignee",
+          "default": "",
+          "type": "text",
+          "label": "Assignee"
+        },
+        {
+          "name": "due_date",
+          "default": "",
+          "type": "text",
+          "label": "Due Date"
+        },
+        {
+          "name": "labels",
+          "default": "",
+          "type": "text",
+          "label": "Labels"
+        },
+        {
+          "name": "position",
+          "type": "int",
+          "default": 0,
+          "label": "Position"
+        }
+      ]
+    }
+  ],
+  "seed": {
+    "boards": [
+      {
+        "name": "Product delivery",
+        "description": "Everything between a customer problem and a shipped change.",
+        "visibility": "private",
+        "owner": "Product"
+      },
+      {
+        "name": "Operations",
+        "description": "Recurring work and incident follow-ups.",
+        "visibility": "private",
+        "owner": "Ops"
+      }
+    ],
+    "lists": [
+      {
+        "board_id": 1,
+        "name": "Backlog",
+        "position": 1,
+        "wip_limit": 0
+      },
+      {
+        "board_id": 1,
+        "name": "Doing",
+        "position": 2,
+        "wip_limit": 3
+      },
+      {
+        "board_id": 1,
+        "name": "Review",
+        "position": 3,
+        "wip_limit": 3
+      },
+      {
+        "board_id": 1,
+        "name": "Done",
+        "position": 4,
+        "wip_limit": 0
+      },
+      {
+        "board_id": 2,
+        "name": "Inbox",
+        "position": 1,
+        "wip_limit": 0
+      },
+      {
+        "board_id": 2,
+        "name": "This week",
+        "position": 2,
+        "wip_limit": 5
+      }
+    ],
+    "cards": [
+      {
+        "board_id": 1,
+        "list_id": 1,
+        "title": "Interview five support agents",
+        "notes": "Focus on the ten minutes before a ticket is filed.",
+        "assignee": "Rae",
+        "due_date": "2026-05-09",
+        "labels": "research",
+        "position": 1
+      },
+      {
+        "board_id": 1,
+        "list_id": 1,
+        "title": "Bundle size budget",
+        "notes": "Set a hard ceiling per route and fail CI above it.",
+        "assignee": "",
+        "due_date": "",
+        "labels": "performance",
+        "position": 2
+      },
+      {
+        "board_id": 1,
+        "list_id": 2,
+        "title": "Draft empty-state copy",
+        "notes": "One sentence of orientation, one action.",
+        "assignee": "Mina",
+        "due_date": "2026-05-06",
+        "labels": "design",
+        "position": 1
+      },
+      {
+        "board_id": 1,
+        "list_id": 3,
+        "title": "Audit onboarding emails",
+        "notes": "Remove the third email; it repeats the second.",
+        "assignee": "Sam",
+        "due_date": "2026-05-04",
+        "labels": "lifecycle",
+        "position": 1
+      },
+      {
+        "board_id": 1,
+        "list_id": 4,
+        "title": "Ship CSV export",
+        "notes": "Delivered with streaming for large accounts.",
+        "assignee": "Alex",
+        "due_date": "2026-04-28",
+        "labels": "shipped",
+        "position": 1
+      },
+      {
+        "board_id": 2,
+        "list_id": 5,
+        "title": "Rotate staging credentials",
+        "notes": "Due at the end of the month.",
+        "assignee": "Ops",
+        "due_date": "2026-05-31",
+        "labels": "security",
+        "position": 1
+      }
+    ]
+  }
+}

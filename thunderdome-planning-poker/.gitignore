@@ -1,0 +1,13 @@
+# build output
+/thunderdome
+*.test
+*.out
+
+# local data
+/data/
+*.log
+
+# editor / OS
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "New Expensify",
+    "slug": "new-expensify",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.foundev.newexpensify"
+    },
+    "android": {
+      "package": "com.foundev.newexpensify",
+      "adaptiveIcon": {
+        "backgroundColor": "#0184ff"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}

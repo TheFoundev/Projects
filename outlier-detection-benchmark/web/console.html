@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Console · Oddity</title>
+<meta name="description" content="Oddity measures four outlier detectors on three synthetic worlds: a z-score, an isolation forest, a local outlier factor and a one class SVM are fitted on the normal points of every world, and the ROC AUC says how well each of them finds the rows that do not belong.">
+<meta name="theme-color" content="hsl(202 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=ui-sans-serif,+system-ui,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">OD</span>
+    <span><strong>Oddity</strong><small>Which detector finds the strange rows</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="">Overview</a><a href="console.html" class="active">Console</a></nav>
+</header>
+
+<main id="main" class="wrap">
+  <section>
+    <div class="head">
+      <div>
+        <span class="eyebrow">Console</span>
+        <h1 style="margin-top:10px;font-size:clamp(1.7rem,3.4vw,2.4rem)">Oddity</h1>
+        <p class="lede" style="margin-top:8px">The mean AUC of every detector, the AUC of every detector on every world, and the size of the worlds the benchmark measures on.</p>
+      </div>
+      <div class="toolbar">
+        <button class="btn small" data-refresh>Refresh</button>
+        
+      </div>
+    </div>
+    <div class="stats reveal"><div class="stat"><div class="value" data-stat="best_auc">—</div><div class="label">Best mean AUC</div></div><div class="stat"><div class="value" data-stat="best_detector">—</div><div class="label">Best detector</div></div><div class="stat"><div class="value" data-stat="detectors">—</div><div class="label">Detectors</div></div><div class="stat"><div class="value" data-stat="datasets">—</div><div class="label">Worlds</div></div></div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="grid cols-2">
+      <section class="panel reveal">
+  <div class="panel-head"><h3>The detectors and their mean</h3><span class="badge" data-panel-status>idle</span></div>
+  <div class="panel-body"><p class="lede" style="font-size:.92rem">The mean AUC of every detector over the three worlds, the best one first.</p>
+<div class="panel" style="margin-top:14px;box-shadow:none">
+  <table>
+    <thead><tr><th>Detector</th><th>Mean AUC</th></tr></thead>
+    <tbody data-list="detectors"></tbody>
+  </table>
+</div></div>
+</section><section class="panel reveal">
+  <div class="panel-head"><h3>Every world, every detector</h3><span class="badge" data-panel-status>idle</span></div>
+  <div class="panel-body"><p class="lede" style="font-size:.92rem">The AUC of every detector on every world, so a detector that is only good on one of them is visible.</p>
+<div class="panel" style="margin-top:14px;box-shadow:none">
+  <table>
+    <thead><tr><th>World</th><th>Detector</th><th>AUC</th></tr></thead>
+    <tbody data-list="auc"></tbody>
+  </table>
+</div></div>
+</section><section class="panel reveal">
+  <div class="panel-head"><h3>The worlds of the benchmark</h3><span class="badge" data-panel-status>idle</span></div>
+  <div class="panel-body"><p class="lede" style="font-size:.92rem">How many points every world holds and how many of them are outliers.</p>
+<div class="panel" style="margin-top:14px;box-shadow:none">
+  <table>
+    <thead><tr><th>World</th><th>Points</th><th>Outliers</th></tr></thead>
+    <tbody data-list="datasets"></tbody>
+  </table>
+</div></div>
+</section>
+      
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Oddity · console</span>
+    <span><a href="index.html">Back to the overview</a></span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("[data-refresh]").forEach(function (button) {
+    button.addEventListener("click", function () { location.reload(); });
+  });
+});
+</script>
+</body>
+</html>

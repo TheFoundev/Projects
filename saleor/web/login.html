@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in · Saleor</title>
+<meta name="description" content="The sign-in portal of Saleor">
+<meta name="theme-color" content="hsl(15 72% 46%)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=ui-sans-serif,+system-ui,+'Segoe+UI',+sans-serif:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="mark">Sa</span>
+    <span><strong>Saleor</strong><small>GraphQL-first commerce for a growing catalogue</small></span>
+  </a>
+  <nav class="nav"><a href="index.html" class="">Overview</a><a href="console.html" class="">Console</a><a href="login.html" class="active">Sign in</a></nav>
+</header>
+
+<main id="main" class="auth">
+  <div class="auth-card">
+    <span class="mark">Sa</span>
+    <h1 style="font-size:1.6rem">Sign in</h1>
+    <p class="lede" style="margin:8px 0 20px;font-size:.95rem">Saleor runs a product catalogue with prices in cents and a stock count, a session cart that never offers more than there is, a checkout that validates the stock and takes it in one transaction, and a small GraphQL endpoint that answers with the products, the orders and the channels.</p>
+    <form data-login>
+  <div class="field"><label for="u">Email</label><input id="u" name="username" placeholder="you@example.test" autocomplete="username" required></div>
+  <div class="field"><label for="p">Password</label><input id="p" name="password" type="password" autocomplete="current-password" required></div>
+  <button class="btn primary" type="submit" style="width:100%">Sign in</button>
+</form>
+<p class="hint" style="margin-top:16px">The accounts live in the shop itself. The shop starts with the account <code>demo</code> / <code>demo123</code>, which is the owner; every other account that registers is a member. The password is stored as a hash of Werkzeug and the session is a signed cookie of Flask.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap"><span>Saleor · sign in</span><span><a href="index.html">Back to the overview</a></span></div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "hospitalrun",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Offline-first hospital management frontend covering patient records, appointments, prescriptions, labs, imaging and incidents.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/"
+  },
+  "engines": {
+    "node": ">=22.5"
+  }
+}
