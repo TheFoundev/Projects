@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlateSight — ANPR Operator Console</title>
+<meta name="description" content="Operator console preview for the vehicle-number-plate-recognition project: YOLOv5 plate detection running inside a Streamlit app.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Barlow:wght@400;500;600&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead__inner">
+    <div class="plate plate--masthead" aria-hidden="true">
+      <span class="plate__gb">GB</span>
+      <span class="plate__text">PLATESIGHT</span>
+    </div>
+    <div class="masthead__copy">
+      <h1>PlateSight</h1>
+      <p class="masthead__sub">Automatic number plate recognition (YOLOv5) — operator console preview</p>
+    </div>
+  </div>
+
+  <div class="status-strip" role="note" aria-label="Model status">
+    <span class="status-strip__lamp" aria-hidden="true"></span>
+    <span class="status-strip__item">WEIGHTS: <strong>model/last.pt</strong> (14,378,245 bytes — present in repo)</span>
+    <span class="status-strip__item">CONF <strong>0.5</strong></span>
+    <span class="status-strip__item">IOU <strong>0.45</strong></span>
+    <span class="status-strip__item">INFER SIZE <strong>640</strong></span>
+    <span class="status-strip__item status-strip__item--warn">INFERENCE RUNS INSIDE THE STREAMLIT APP — NOT IN THIS PAGE</span>
+  </div>
+
+  <nav class="tabs" role="tablist" aria-label="Console sections">
+    <button class="tab" id="tab-analyze" role="tab" aria-selected="true" aria-controls="panel-analyze" data-tab="analyze">Analyze</button>
+    <button class="tab" id="tab-samples" role="tab" aria-selected="false" aria-controls="panel-samples" data-tab="samples" tabindex="-1">Samples</button>
+    <button class="tab" id="tab-about" role="tab" aria-selected="false" aria-controls="panel-about" data-tab="about" tabindex="-1">About model</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ TAB: ANALYZE ============ -->
+<section class="panel" id="panel-analyze" role="tabpanel" aria-labelledby="tab-analyze">
+  <div class="panel-head">
+    <h2>Image intake</h2>
+    <p>Drop a vehicle photo below to stage it for the Streamlit app. Accepted formats match the app's uploader exactly: <strong>PNG, JPG, BMP, JPEG</strong>. This console prepares and inspects inputs — plate detection itself runs in <code>streamlit run app.py</code>.</p>
+  </div>
+
+  <div class="intake">
+    <div class="intake__left">
+      <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Drop an image here or press Enter to browse for a file">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="8.5" cy="10" r="1.8" fill="currentColor"/>
+          <path d="M4 17l5-4.5 3.5 3 3-2.5L20 17" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
+        <p class="dropzone__main">Drop image here</p>
+        <p class="dropzone__sub">or click to browse — PNG · JPG · BMP · JPEG</p>
+      </div>
+      <input type="file" id="file-input" accept=".png,.jpg,.bmp,.jpeg,image/png,image/jpeg,image/bmp" hidden>
+
+      <div class="file-meta" id="file-meta" hidden>
+        <div class="file-meta__row"><span class="file-meta__k">FILE</span><span class="file-meta__v" id="meta-name">—</span></div>
+        <div class="file-meta__row"><span class="file-meta__k">SIZE</span><span class="file-meta__v" id="meta-size">—</span></div>
+        <div class="file-meta__row"><span class="file-meta__k">TYPE</span><span class="file-meta__v" id="meta-type">—</span></div>
+        <div class="file-meta__actions">
+          <button class="btn btn--primary" id="btn-detect">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.6"/></svg>
+            Detect plates
+          </button>
+          <button class="btn" id="btn-download-preview">Download preview</button>
+          <button class="btn btn--ghost" id="btn-clear">Clear</button>
+        </div>
+      </div>
+
+      <div class="inline-error" id="intake-error" hidden role="alert"></div>
+    </div>
+
+    <div class="intake__right">
+      <div class="preview-frame" id="preview-frame">
+        <img id="preview-img" alt="Uploaded vehicle preview" hidden>
+        <div class="preview-frame__empty" id="preview-empty">
+          <p>No image staged yet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Detection output</h2>
+  <div class="result-frame" id="result-frame">
+    <span class="result-frame__watermark">Live detection runs in Streamlit — no model output here</span>
+    <div class="result-frame__skeleton" id="result-skeleton">
+      <div class="skeleton-bar skeleton-bar--wide"></div>
+      <div class="skeleton-bar"></div>
+      <div class="skeleton-bar skeleton-bar--mid"></div>
+      <p class="result-frame__hint">Stage an image and press <strong>Detect plates</strong> for run instructions. Bounding boxes are never fabricated in this console — the YOLOv5 model executes only inside the Streamlit process.</p>
+    </div>
+    <div class="run-panel" id="run-panel" hidden>
+      <div class="run-panel__badge">NO REST API IN THIS REPO</div>
+      <p>This repository ships a Streamlit backend only. To run real plate detection with the included weights:</p>
+      <pre class="cmd"><code>pip install -r requirements.txt
+streamlit run app.py</code><button class="copy-btn" data-copy="streamlit run app.py" aria-label="Copy streamlit command">Copy</button></pre>
+      <ol class="run-steps">
+        <li>Open <code>http://localhost:8501</code>.</li>
+        <li>Sidebar → activity type <strong>Upload Image</strong>, upload the file you staged here (PNG/JPG/BMP/JPEG).</li>
+        <li>The app loads <code>model/last.pt</code> via <code>torch.hub.load("ultralytics/yolov5", "custom", path="model/last.pt")</code> with conf&nbsp;0.5 / IoU&nbsp;0.45 and runs <code>model(img, size=640)</code>.</li>
+        <li>Rendered detections are saved as <code>downloads/output_&lt;filename&gt;</code> and offered back for download.</li>
+        <li>Alternatively pick <strong>Live Video Feed</strong> in the sidebar to run webcam detection (<code>cv2.VideoCapture(0)</code>).</li>
+      </ol>
+      <p class="run-panel__note">Your staged file stays in this browser — nothing is uploaded anywhere from this page.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TAB: SAMPLES ============ -->
+<section class="panel" id="panel-samples" role="tabpanel" aria-labelledby="tab-samples" hidden>
+  <div class="panel-head">
+    <h2>Repository sample images</h2>
+    <p>Real input images bundled in <code>uploads/</code> — the same files used to produce the checked-in <code>downloads/output_*</code> results. Click any thumbnail to inspect. Sample input — run the app to get detections.</p>
+  </div>
+  <div class="sample-grid" id="sample-grid"></div>
+</section>
+
+<!-- ============ TAB: ABOUT ============ -->
+<section class="panel" id="panel-about" role="tabpanel" aria-labelledby="tab-about" hidden>
+  <div class="panel-head">
+    <h2>About the model</h2>
+    <p>Factual inventory of what this repository actually contains and runs.</p>
+  </div>
+
+  <div class="card-grid">
+    <article class="card">
+      <h3>Detector</h3>
+      <p>Custom-trained <strong>YOLOv5</strong> number-plate detector. Weights ship in the repo at <code>model/last.pt</code> (14,378,245 bytes). Loaded in <code>app.py</code> with:</p>
+      <pre class="cmd"><code>torch.hub.load("ultralytics/yolov5", "custom", path="model/last.pt")</code><button class="copy-btn" data-copy='torch.hub.load("ultralytics/yolov5", "custom", path="model/last.pt")' aria-label="Copy torch.hub load line">Copy</button></pre>
+      <p>Runtime settings from <code>app.py</code>: <strong>conf = 0.5</strong>, <strong>iou = 0.45</strong>, inference <strong>size = 640</strong>.</p>
+    </article>
+
+    <article class="card">
+      <h3>Inference pipeline</h3>
+      <ol class="card__list">
+        <li>Upload image (PNG/JPG/BMP/JPEG) or enable webcam.</li>
+        <li>File saved to <code>uploads/</code>.</li>
+        <li><code>results = model(img, size=640)</code> → <code>results.render()</code>.</li>
+        <li>Annotated frame saved to <code>downloads/output_&lt;name&gt;</code> (JPEG).</li>
+        <li>Streamlit renders the image and offers a download button.</li>
+      </ol>
+    </article>
+
+    <article class="card card--warn">
+      <h3>OCR is not implemented</h3>
+      <p>Project metadata lists a stack of “Python; OpenCV; Tesseract” and a goal mentioning OCR cleanup — but <strong><code>app.py</code> never calls Tesseract or any OCR library</strong>. The app <em>detects</em> plate regions with YOLOv5 and renders annotated images; it does not read/extract plate text. Treat any “recognition” claim as localisation only.</p>
+    </article>
+
+    <article class="card">
+      <h3>Deployment options (real files)</h3>
+      <ul class="card__list">
+        <li><strong>Local:</strong> <code>streamlit run app.py</code> (from README)</li>
+        <li><strong>Docker:</strong> <code>Dockerfile</code> — python:3.7 base, <code>docker build -f Dockerfile -t app:latest .</code> then <code>docker run -p 8501:8501 app:latest</code></li>
+        <li><strong>Heroku-style:</strong> <code>Procfile</code> → <code>web: sh setup.sh && streamlit run app.py</code>; <code>runtime.txt</code> pins python-3.7.13</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <h3>Dependency pins (age warning)</h3>
+      <p><code>requirements.txt</code> pins an older stack: <code>torch==1.8.1</code>, <code>torchvision==0.9.1</code>, <code>streamlit==1.9.0</code>, <code>opencv-python==4.5.5.64</code>, <code>Pillow==9.1.0</code>, <code>Flask==2.1.2</code>. The <code>@st.cache</code> decorator used in <code>app.py</code> predates <code>@st.cache_data</code>/<code>@st.cache_resource</code> in modern Streamlit — install the pinned versions for a faithful run.</p>
+    </article>
+
+    <article class="card">
+      <h3>Provenance</h3>
+      <p>Streamlit implementation by Prateek Ralhan, extending <a href="https://github.com/mftnakrsu/Automatic_Number_Plate_Recognition_YOLO_OCR" rel="noopener">mftnakrsu's YOLO+OCR work</a>. Licensed MIT. Upstream YOLOv5 code lives under <code>models/</code> and <code>utils/</code>.</p>
+    </article>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <span>PlateSight console preview — static UI. Inference lives in the Streamlit app.</span>
+  <span>model/last.pt · conf 0.5 · IoU 0.45 · size 640</span>
+</footer>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Sample image viewer">
+  <button class="lightbox__close" id="lb-close" aria-label="Close viewer">&times;</button>
+  <button class="lightbox__nav lightbox__nav--prev" id="lb-prev" aria-label="Previous sample">&#10094;</button>
+  <figure class="lightbox__figure">
+    <img id="lb-img" alt="">
+    <figcaption id="lb-caption">Sample input — run the app to get detections</figcaption>
+  </figure>
+  <button class="lightbox__nav lightbox__nav--next" id="lb-next" aria-label="Next sample">&#10095;</button>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="js/app.js" defer></script>
+</body>
+</html>

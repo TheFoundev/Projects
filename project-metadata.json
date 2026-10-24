@@ -1,0 +1,14 @@
+﻿{
+    "id":  "vehicle-number-plate-recognition",
+    "name":  "Vehicle Number Plate Recognition",
+    "domain":  "Artificial Intelligence \u0026 Machine Learning",
+    "repository":  "https://github.com/prateekralhan/Streamlit-based-Automatic-Number-Plate-Recognition",
+    "stack":  "Python; OpenCV; Tesseract",
+    "goal":  "Plate localisation, OCR cleanup with regex and CSV log.",
+    "license":  "MIT",
+    "licenseWarning":  null,
+    "entry":  "app.py",
+    "expectedFileCount":  27,
+    "downloadStatus":  "success",
+    "downloadedFileCount":  115
+}
