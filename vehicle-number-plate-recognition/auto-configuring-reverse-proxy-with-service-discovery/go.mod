@@ -1,3 +1,0 @@
-module foundev/autoconfiguringreverseproxywithservicediscovery
-
-go 1.22
